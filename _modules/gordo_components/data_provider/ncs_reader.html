@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.data_provider.ncs_reader &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.data_provider.ncs_reader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.data_provider.ncs_reader</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">azure.datalake.store</span> <span class="k">import</span> <span class="n">core</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.base</span> <span class="k">import</span> <span class="n">GordoBaseDataProvider</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">import</span> <span class="n">SensorTag</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="NcsReader"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.ncs_reader.NcsReader">[docs]</a><span class="k">class</span> <span class="nc">NcsReader</span><span class="p">(</span><span class="n">GordoBaseDataProvider</span><span class="p">):</span>
+    <span class="n">ASSET_TO_PATH</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;1191-asgb&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/PI System Operation North/sensordata/1191-ASGB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1755-gra&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/Aspen MS - IP21 Grane/sensordata/1755-GRA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1125-kvb&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/PI System Operation Norway/sensordata/1125-KVB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1775-trob&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/Aspen MS - IP21 Troll B/sensordata/1775-TROB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1776-troc&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/Aspen MS - IP21 Troll C/sensordata/1776-TROC&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1130-troa&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/Aspen MS - IP21 Troll A/sensordata/1130-TROA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1101-sfb&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/IMS Statfjord/sensordata/​1101-SFB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;1218-gkr&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/corporate/PI System Manager Sleipner/sensordata/1218-GKR&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">AzureDLFileSystem</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a reader for tags from the Norwegian Continental Shelf. Currently</span>
+<span class="sd">        only supports a small subset of assets.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+
+<div class="viewcode-block" id="NcsReader.can_handle_tag"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.ncs_reader.NcsReader.can_handle_tag">[docs]</a>    <span class="k">def</span> <span class="nf">can_handle_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">SensorTag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements GordoBaseDataProvider, see base class for documentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">NcsReader</span><span class="o">.</span><span class="n">base_path_from_asset</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">asset</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NcsReader.load_series"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.ncs_reader.NcsReader.load_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See GordoBaseDataProvider for documentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">to_ts</span> <span class="o">&lt;</span> <span class="n">from_ts</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;NCS reader called with to_ts: </span><span class="si">{to_ts}</span><span class="s2"> before from_ts: </span><span class="si">{from_ts}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">adls_file_system_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span>
+
+        <span class="n">years</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">from_ts</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">to_ts</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_list</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Processing tag </span><span class="si">{tag.name}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">tag_frame_all_years</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tag_files</span><span class="p">(</span>
+                <span class="n">adls_file_system_client</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">years</span>
+            <span class="p">)</span>
+            <span class="n">filtered</span> <span class="o">=</span> <span class="n">tag_frame_all_years</span><span class="p">[</span>
+                <span class="p">(</span><span class="n">tag_frame_all_years</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">from_ts</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">tag_frame_all_years</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">to_ts</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="k">yield</span> <span class="n">filtered</span></div>
+
+<div class="viewcode-block" id="NcsReader.read_tag_files"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.ncs_reader.NcsReader.read_tag_files">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_tag_files</span><span class="p">(</span>
+        <span class="n">adls_file_system_client</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">AzureDLFileSystem</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">SensorTag</span><span class="p">,</span> <span class="n">years</span><span class="p">:</span> <span class="nb">range</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download tag files for the given years into dataframes,</span>
+<span class="sd">        and return as one dataframe.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adls_file_system_client: core.AzureDLFileSystem</span>
+<span class="sd">            the AzureDLFileSystem client to use</span>
+<span class="sd">        tag: SensorTag</span>
+<span class="sd">            the tag to download data for</span>
+<span class="sd">        years: range</span>
+<span class="sd">            range object providing years to include</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.Series:</span>
+<span class="sd">            Series with all years for one tag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tag_base_path</span> <span class="o">=</span> <span class="n">NcsReader</span><span class="o">.</span><span class="n">base_path_from_asset</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">asset</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tag_base_path</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Unable to find base path from tag </span><span class="si">{tag}</span><span class="s2"> &quot;</span><span class="p">)</span>
+        <span class="n">all_years</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">tag_base_path</span> <span class="o">+</span> <span class="n">f</span><span class="s2">&quot;/</span><span class="si">{tag.name}</span><span class="s2">/</span><span class="si">{tag.name}</span><span class="s2">_</span><span class="si">{year}</span><span class="s2">.csv&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Parsing file </span><span class="si">{file_path}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">info</span> <span class="o">=</span> <span class="n">adls_file_system_client</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="n">file_size</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;length&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;File size: </span><span class="si">{file_size:.2f}</span><span class="s2">MB&quot;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">adls_file_system_client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                    <span class="n">f</span><span class="p">,</span>
+                    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Sensor&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">],</span>
+                    <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="n">tag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Timestamp&quot;</span><span class="p">],</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="n">tag</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
+                    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">],</span>
+                    <span class="n">date_parser</span><span class="o">=</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">all_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Done parsing file </span><span class="si">{file_path}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_years</span><span class="p">)</span>
+
+        <span class="c1"># There often comes duplicated timestamps, keep the last</span>
+        <span class="k">if</span> <span class="n">combined</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">combined</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="o">~</span><span class="n">combined</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">combined</span><span class="p">[</span><span class="n">tag</span><span class="o">.</span><span class="n">name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NcsReader.base_path_from_asset"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.ncs_reader.NcsReader.base_path_from_asset">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">base_path_from_asset</span><span class="p">(</span><span class="n">asset</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolves an asset code to the datalake basepath containing the data.</span>
+<span class="sd">        Returns None if it does not match any of the asset codes we know.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">asset</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Looking for match for asset </span><span class="si">{asset}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">asset</span> <span class="o">=</span> <span class="n">asset</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">asset</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NcsReader</span><span class="o">.</span><span class="n">ASSET_TO_PATH</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Could not find match for asset </span><span class="si">{asset}</span><span class="s2"> in the list of &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;supported assets: {NcsReader.ASSET_TO_PATH.keys()}&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;Found asset code </span><span class="si">{asset}</span><span class="s2">, returning </span><span class="si">{NcsReader.ASSET_TO_PATH[asset]}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">NcsReader</span><span class="o">.</span><span class="n">ASSET_TO_PATH</span><span class="p">[</span><span class="n">asset</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

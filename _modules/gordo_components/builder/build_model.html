@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.builder.build_model &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.builder.build_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.builder.build_model</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">TimeSeriesSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.util</span> <span class="k">import</span> <span class="n">disk_registry</span>
+<span class="kn">from</span> <span class="nn">gordo_components</span> <span class="k">import</span> <span class="n">serializer</span><span class="p">,</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.dataset</span> <span class="k">import</span> <span class="n">_get_dataset</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.base</span> <span class="k">import</span> <span class="n">GordoBaseDataset</span>
+<span class="kn">from</span> <span class="nn">gordo_components.model.base</span> <span class="k">import</span> <span class="n">GordoBase</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="build_model"><a class="viewcode-back" href="../../../components/builder.html#gordo_components.builder.build_model.build_model">[docs]</a><span class="k">def</span> <span class="nf">build_model</span><span class="p">(</span>
+    <span class="n">model_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">data_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">GordoBaseDataset</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a model and serialize to a directory for later serving.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_config: dict</span>
+<span class="sd">        Mapping of Model to initialize and any additional kwargs which are to be used in it&#39;s initialization.</span>
+<span class="sd">        Example::</span>
+
+<span class="sd">          {&#39;type&#39;: &#39;KerasAutoEncoder&#39;,</span>
+<span class="sd">           &#39;kind&#39;: &#39;feedforward_hourglass&#39;}</span>
+
+<span class="sd">    data_config: dict</span>
+<span class="sd">        Mapping of the Dataset to initialize, following the same logic as model_config.</span>
+<span class="sd">    metadata: dict</span>
+<span class="sd">        Mapping of arbitrary metadata data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Tuple[sklearn.base.BaseEstimator, dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the dataset from config</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Initializing Dataset with config </span><span class="si">{data_config}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">data_config</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_config</span><span class="p">,</span> <span class="n">GordoBaseDataset</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">_get_dataset</span><span class="p">(</span><span class="n">data_config</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching training data&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">time_elapsed_data</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+
+    <span class="c1"># Get the model and dataset</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Initializing Model with config: </span><span class="si">{model_config}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">pipeline_from_definition</span><span class="p">(</span><span class="n">model_config</span><span class="p">)</span>
+
+    <span class="c1"># Cross validate</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Starting to do cross validation&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">cv_scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">X</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">TimeSeriesSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">cv_duration_sec</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+    <span class="c1"># Train</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting to train model.&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">time_elapsed_model</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;user-defined&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">}</span>
+    <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
+    <span class="n">utc_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;model-creation-date&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">utc_dt</span><span class="o">.</span><span class="n">astimezone</span><span class="p">()),</span>
+        <span class="s2">&quot;model-builder-version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+        <span class="s2">&quot;model-config&quot;</span><span class="p">:</span> <span class="n">model_config</span><span class="p">,</span>
+        <span class="s2">&quot;data-query-duration-sec&quot;</span><span class="p">:</span> <span class="n">time_elapsed_data</span><span class="p">,</span>
+        <span class="s2">&quot;model-training-duration-sec&quot;</span><span class="p">:</span> <span class="n">time_elapsed_model</span><span class="p">,</span>
+        <span class="s2">&quot;cross-validation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cv-duration-sec&quot;</span><span class="p">:</span> <span class="n">cv_duration_sec</span><span class="p">,</span>
+            <span class="s2">&quot;scores&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;explained-variance&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                    <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+                    <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+                    <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+                    <span class="s2">&quot;raw-scores&quot;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="n">gordobase_final_step</span> <span class="o">=</span> <span class="n">_get_final_gordo_base_step</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gordobase_final_step</span><span class="p">:</span>
+        <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">gordobase_final_step</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">metadata</span></div>
+
+
+<span class="k">def</span> <span class="nf">_save_model_for_workflow</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save a model according to the expected Argo workflow procedure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model: BaseEstimator</span>
+<span class="sd">        The model to save to the directory with gordo serializer.</span>
+<span class="sd">    metadata: dict</span>
+<span class="sd">        Various mappings of metadata to save alongside model.</span>
+<span class="sd">    output_dir: Union[os.PathLike, str]</span>
+<span class="sd">        The directory where to save the model, will create directories if needed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Union[os.PathLike, str]</span>
+<span class="sd">        Path to the saved model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Ok if some dirs exist</span>
+    <span class="n">serializer</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_dir</span>
+
+
+<span class="k">def</span> <span class="nf">_get_final_gordo_base_step</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the final GordoBase step in a (potential) Pipeline, if it exists.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model: BaseEstimator</span>
+<span class="sd">        The input model or Pipeline to investigate. If a Pipeline is given, look for</span>
+<span class="sd">        the last step in (the possibly nested) Pipeline.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    GordoBase</span>
+<span class="sd">        The final GordoBase object in the pipeline, or None if not found.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">GordoBase</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">model</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
+        <span class="n">last_step_tuple</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Get the last step tuple</span>
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">last_step_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># The actual step is the second element</span>
+        <span class="k">return</span> <span class="n">_get_final_gordo_base_step</span><span class="p">(</span><span class="n">estimator</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="calculate_model_key"><a class="viewcode-back" href="../../../components/builder.html#gordo_components.builder.build_model.calculate_model_key">[docs]</a><span class="k">def</span> <span class="nf">calculate_model_key</span><span class="p">(</span>
+    <span class="n">model_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">data_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates a hash-key from a model and data-config.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Ignores the data_provider key since this is an complicated object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_config: dict</span>
+<span class="sd">        Config for the model. See</span>
+<span class="sd">        :func:`gordo_components.builder.build_model.build_model`.</span>
+<span class="sd">    data_config: dict</span>
+<span class="sd">        Config for the data-configuration. See</span>
+<span class="sd">        :func:`gordo_components.builder.build_model.build_model`.</span>
+<span class="sd">    metadata: Optional[dict] = None</span>
+<span class="sd">        Metadata for the models. See</span>
+<span class="sd">        :func:`gordo_components.builder.build_model.build_model`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str:</span>
+<span class="sd">        A 512 byte hex value as a string based on the content of the parameters.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; len(calculate_model_key(model_config={&quot;model&quot;: &quot;something&quot;},</span>
+<span class="sd">    ... data_config={&quot;tag_list&quot;: [&quot;tag1&quot;, &quot;tag 2&quot;]} ))</span>
+<span class="sd">    128</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># TODO Fix this when we get a good way of passing data_provider in the yaml/json</span>
+    <span class="k">if</span> <span class="s2">&quot;data_provider&quot;</span> <span class="ow">in</span> <span class="n">data_config</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;data_provider key found in data_config, ignoring it when creating hash&quot;</span>
+        <span class="p">)</span>
+        <span class="n">data_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data_config</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;data_provider&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Sets a lot of the parameters to json.dumps explicitly to ensure that we get</span>
+    <span class="c1"># consistent hash-values even if json.dumps changes their default values (and as such might</span>
+    <span class="c1"># generate different json which again gives different hash)</span>
+    <span class="n">json_rep</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;model_config&quot;</span><span class="p">:</span> <span class="n">model_config</span><span class="p">,</span>
+            <span class="s2">&quot;data_config&quot;</span><span class="p">:</span> <span class="n">data_config</span><span class="p">,</span>
+            <span class="s2">&quot;user-defined&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">skipkeys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">check_circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">separators</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha3_512</span><span class="p">(</span><span class="n">json_rep</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="provide_saved_model"><a class="viewcode-back" href="../../../components/builder.html#gordo_components.builder.build_model.provide_saved_model">[docs]</a><span class="k">def</span> <span class="nf">provide_saved_model</span><span class="p">(</span>
+    <span class="n">model_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">data_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">model_register_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">replace_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ensures that the desired model exists on disk, and returns the path to it.</span>
+
+<span class="sd">    Builds the model if needed, or finds it among already existing models if</span>
+<span class="sd">    ``model_register_dir`` is non-None, and we find the model there. If</span>
+<span class="sd">    `model_register_dir` is set we will also store the model-location of the generated</span>
+<span class="sd">    model there for future use. Think about it as a cache that is never emptied.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_config: dict</span>
+<span class="sd">        Config for the model. See</span>
+<span class="sd">        :func:`gordo_components.builder.build_model.build_model`.</span>
+<span class="sd">    data_config: dict</span>
+<span class="sd">        Config for the data-configuration. See</span>
+<span class="sd">        :func:`gordo_components.builder.build_model.build_model`.</span>
+<span class="sd">    metadata: dict</span>
+<span class="sd">        Extra metadata to be added to the built models if it is built. See</span>
+<span class="sd">        :func:`gordo_components.builder.build_model.build_model`.</span>
+<span class="sd">    output_dir: Union[os.PathLike, str]</span>
+<span class="sd">        A path to where the model will be deposited if it is built.</span>
+<span class="sd">    model_register_dir:</span>
+<span class="sd">        A path to a register, see `gordo_components.util.disk_registry`. If this is None</span>
+<span class="sd">        then always build the model, otherwise try to resolve the model from the</span>
+<span class="sd">        registry.</span>
+<span class="sd">    replace_cache: bool</span>
+<span class="sd">        Forces a rebuild of the model, and replaces the entry in the cache with the new</span>
+<span class="sd">        model.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Union[os.PathLike, str]:</span>
+<span class="sd">        Path to the model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cache_key</span> <span class="o">=</span> <span class="n">calculate_model_key</span><span class="p">(</span><span class="n">model_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">model_register_dir</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;Model caching activated, attempting to read model-location with key &quot;</span>
+            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{cache_key}</span><span class="s2"> from register </span><span class="si">{model_register_dir}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">replace_cache</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;replace_cache activated, deleting any existing cache entry&quot;</span><span class="p">)</span>
+            <span class="n">cache_key</span> <span class="o">=</span> <span class="n">calculate_model_key</span><span class="p">(</span>
+                <span class="n">model_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span>
+            <span class="p">)</span>
+            <span class="n">disk_registry</span><span class="o">.</span><span class="n">delete_value</span><span class="p">(</span><span class="n">model_register_dir</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">)</span>
+
+        <span class="n">existing_model_location</span> <span class="o">=</span> <span class="n">disk_registry</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">model_register_dir</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">)</span>
+
+        <span class="c1"># Check that the model is actually there</span>
+        <span class="k">if</span> <span class="n">existing_model_location</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">existing_model_location</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Found existing model at path </span><span class="si">{existing_model_location}</span><span class="s2">, returning it&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">existing_model_location</span>
+        <span class="k">elif</span> <span class="n">existing_model_location</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Found that the model-path </span><span class="si">{existing_model_location}</span><span class="s2"> stored in the &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;registry did not exist.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Did not find the model with key </span><span class="si">{cache_key}</span><span class="s2"> in the register at &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{model_register_dir}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span>
+        <span class="n">model_config</span><span class="o">=</span><span class="n">model_config</span><span class="p">,</span> <span class="n">data_config</span><span class="o">=</span><span class="n">data_config</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span>
+    <span class="p">)</span>
+    <span class="n">model_location</span> <span class="o">=</span> <span class="n">_save_model_for_workflow</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Successfully built model, and deposited at </span><span class="si">{model_location}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">model_register_dir</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Writing model-location to model registry&quot;</span><span class="p">)</span>
+        <span class="n">disk_registry</span><span class="o">.</span><span class="n">write_key</span><span class="p">(</span><span class="n">model_register_dir</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">,</span> <span class="n">model_location</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model_location</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

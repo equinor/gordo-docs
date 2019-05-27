@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.data_provider.providers &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.data_provider.providers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.data_provider.providers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">cachetools</span> <span class="k">import</span> <span class="n">cached</span><span class="p">,</span> <span class="n">TTLCache</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">influxdb</span> <span class="k">import</span> <span class="n">DataFrameClient</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.azure_utils</span> <span class="k">import</span> <span class="n">create_adls_client</span>
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.base</span> <span class="k">import</span> <span class="n">GordoBaseDataProvider</span><span class="p">,</span> <span class="n">capture_args</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.iroc_reader</span> <span class="k">import</span> <span class="n">IrocReader</span>
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.ncs_reader</span> <span class="k">import</span> <span class="n">NcsReader</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">import</span> <span class="n">SensorTag</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_series_from_multiple_providers"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.load_series_from_multiple_providers">[docs]</a><span class="k">def</span> <span class="nf">load_series_from_multiple_providers</span><span class="p">(</span>
+    <span class="n">data_providers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">GordoBaseDataProvider</span><span class="p">],</span>
+    <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">tag_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads the tags in `tag_list` using multiple instances of</span>
+<span class="sd">    :class:`gordo_components.data_provider.base.GordoBaseDataProvider` provided in the</span>
+<span class="sd">    parameter `data_providers`. Will load a tag from the first data provider in the list</span>
+<span class="sd">    which claims it. See</span>
+<span class="sd">    :func:`gordo_components.data_provider.base.GordoBaseDataProvider.load_series`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    typing.Iterable[pd.Series]</span>
+<span class="sd">        The required tags as an iterable of series where each series contains</span>
+<span class="sd">        the tag values along with a datetime index.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">readers_to_tags</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">reader</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">reader</span> <span class="ow">in</span> <span class="n">data_providers</span>
+    <span class="p">}</span>  <span class="c1"># type: typing.Dict[GordoBaseDataProvider, typing.List[SensorTag]]</span>
+
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">tag_reader</span> <span class="ow">in</span> <span class="n">data_providers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tag_reader</span><span class="o">.</span><span class="n">can_handle_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                <span class="n">readers_to_tags</span><span class="p">[</span><span class="n">tag_reader</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Assigning tag: </span><span class="si">{tag}</span><span class="s2"> to reader </span><span class="si">{tag_reader}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="c1"># In case of a tag matching two readers, we let the &quot;first&quot;</span>
+                <span class="c1"># one handle it</span>
+                <span class="k">break</span>
+        <span class="c1"># The else branch is executed if the break is not called</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Found no data providers able to download the tag </span><span class="si">{tag}</span><span class="s2"> &quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tag_reader</span><span class="p">,</span> <span class="n">readers_tags</span> <span class="ow">in</span> <span class="n">readers_to_tags</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">readers_tags</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Using tag reader </span><span class="si">{tag_reader}</span><span class="s2"> to fetch tags </span><span class="si">{readers_tags}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">tag_reader</span><span class="o">.</span><span class="n">load_series</span><span class="p">(</span>
+                <span class="n">from_ts</span><span class="o">=</span><span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="o">=</span><span class="n">to_ts</span><span class="p">,</span> <span class="n">tag_list</span><span class="o">=</span><span class="n">readers_tags</span>
+            <span class="p">):</span>
+                <span class="k">yield</span> <span class="n">series</span></div>
+
+
+<div class="viewcode-block" id="DataLakeProvider"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.DataLakeProvider">[docs]</a><span class="k">class</span> <span class="nc">DataLakeProvider</span><span class="p">(</span><span class="n">GordoBaseDataProvider</span><span class="p">):</span>
+
+    <span class="n">_SUB_READER_CLASSES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">NcsReader</span><span class="p">,</span>
+        <span class="n">IrocReader</span><span class="p">,</span>
+    <span class="p">]</span>  <span class="c1"># type: typing.List[typing.Type[GordoBaseDataProvider]]</span>
+
+<div class="viewcode-block" id="DataLakeProvider.can_handle_tag"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.DataLakeProvider.can_handle_tag">[docs]</a>    <span class="k">def</span> <span class="nf">can_handle_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Implements base method, see GordoBaseDataProvider&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sub_dataproviders</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">can_handle_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="nd">@capture_args</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">storename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dataplatformdlsprod&quot;</span><span class="p">,</span>
+        <span class="n">interactive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">dl_service_auth_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates a DataLakeBackedDataset, for fetching of data from the data lake</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        storename</span>
+<span class="sd">            The store name to read data from</span>
+<span class="sd">        interactive: bool</span>
+<span class="sd">            To perform authentication interactively, or attempt to do it a</span>
+<span class="sd">            automatically, in such a case must provide &#39;del_service_authS_tr&#39;</span>
+<span class="sd">            parameter or as &#39;DL_SERVICE_AUTH_STR&#39; env var.</span>
+<span class="sd">        dl_service_auth_str: Optional[str]</span>
+<span class="sd">            string on the format &#39;tenant_id:service_id:service_secret&#39;. To</span>
+<span class="sd">            perform authentication automatically; will default to</span>
+<span class="sd">            DL_SERVICE_AUTH_STR env var or None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storename</span> <span class="o">=</span> <span class="n">storename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interactive</span> <span class="o">=</span> <span class="n">interactive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dl_service_auth_str</span> <span class="o">=</span> <span class="n">dl_service_auth_str</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;DL_SERVICE_AUTH_STR&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DataLakeProvider.load_series"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.DataLakeProvider.load_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See</span>
+<span class="sd">        :func:`gordo_components.data_provider.base.GordoBaseDataProvider.load_series`</span>
+<span class="sd">        for documentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We create them here so we only try to get a auth-token once we actually need</span>
+        <span class="c1"># it, otherwise we would have constructed them in the constructor.</span>
+        <span class="k">if</span> <span class="n">to_ts</span> <span class="o">&lt;</span> <span class="n">from_ts</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;DataLakeReader called with to_ts: </span><span class="si">{to_ts}</span><span class="s2"> before from_ts: </span><span class="si">{from_ts}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">data_providers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sub_dataproviders</span><span class="p">()</span>
+
+        <span class="k">yield from</span> <span class="n">load_series_from_multiple_providers</span><span class="p">(</span>
+            <span class="n">data_providers</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">,</span> <span class="n">tag_list</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">create_adls_client</span><span class="p">(</span>
+                <span class="n">storename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">storename</span><span class="p">,</span>
+                <span class="n">dl_service_auth_str</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dl_service_auth_str</span><span class="p">,</span>
+                <span class="n">interactive</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interactive</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span>
+
+    <span class="k">def</span> <span class="nf">_get_sub_dataproviders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data_providers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">t_reader</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_client</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">t_reader</span> <span class="ow">in</span> <span class="n">DataLakeProvider</span><span class="o">.</span><span class="n">_SUB_READER_CLASSES</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">data_providers</span></div>
+
+
+<div class="viewcode-block" id="InfluxDataProvider"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.InfluxDataProvider">[docs]</a><span class="k">class</span> <span class="nc">InfluxDataProvider</span><span class="p">(</span><span class="n">GordoBaseDataProvider</span><span class="p">):</span>
+    <span class="nd">@capture_args</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">measurement</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Value&quot;</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">api_key_header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">client</span><span class="p">:</span> <span class="n">DataFrameClient</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        measurement: str</span>
+<span class="sd">            Name of the measurement to select from in Influx</span>
+<span class="sd">        value_name: str</span>
+<span class="sd">            Name of value to select, default to &#39;Value&#39;</span>
+<span class="sd">        api_key: str</span>
+<span class="sd">            Api key to use in header</span>
+<span class="sd">        api_key_header: str</span>
+<span class="sd">            Key of header to insert the api key for requests</span>
+<span class="sd">        uri: str</span>
+<span class="sd">            Create a client from a URI</span>
+<span class="sd">            format: &lt;username&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;optional-path&gt;/&lt;db_name&gt;</span>
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            These are passed directly to the init args of influxdb.DataFrameClient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measurement</span> <span class="o">=</span> <span class="n">measurement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_name</span> <span class="o">=</span> <span class="n">value_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span> <span class="o">=</span> <span class="n">client</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">uri</span><span class="p">:</span>
+
+                <span class="c1"># Import here to avoid any circular import error caused by</span>
+                <span class="c1"># importing TimeSeriesDataset, which imports this provider</span>
+                <span class="c1"># which would have imported Client via traversal of the __init__</span>
+                <span class="c1"># which would then try to import TimeSeriesDataset again.</span>
+                <span class="kn">from</span> <span class="nn">gordo_components.client.utils</span> <span class="k">import</span> <span class="n">influx_client_from_uri</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span> <span class="o">=</span> <span class="n">influx_client_from_uri</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+                    <span class="n">uri</span><span class="p">,</span>
+                    <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+                    <span class="n">api_key_header</span><span class="o">=</span><span class="n">api_key_header</span><span class="p">,</span>
+                    <span class="n">dataframe_client</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span> <span class="o">=</span> <span class="n">DataFrameClient</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key_header</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s2">&quot;If supplying an api key, you must supply the header key to insert it under.&quot;</span>
+                        <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span><span class="o">.</span><span class="n">_headers</span><span class="p">[</span><span class="n">api_key_header</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_key</span>
+
+<div class="viewcode-block" id="InfluxDataProvider.load_series"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.InfluxDataProvider.load_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See GordoBaseDataProvider for documentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_single_sensor</span><span class="p">(</span>
+                <span class="n">from_ts</span><span class="o">=</span><span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="o">=</span><span class="n">to_ts</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">measurement</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_list</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluxDataProvider.read_single_sensor"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.InfluxDataProvider.read_single_sensor">[docs]</a>    <span class="k">def</span> <span class="nf">read_single_sensor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">measurement</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            from_ts: datetime</span>
+<span class="sd">                Datetime to start querying for data</span>
+<span class="sd">            to_ts: datetime</span>
+<span class="sd">                Datetime to stop query for data</span>
+<span class="sd">            tag: str</span>
+<span class="sd">                Name of the tag to match in influx</span>
+<span class="sd">            measurement: str</span>
+<span class="sd">                name of the measurement to select from</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            One column DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Reading tag: </span><span class="si">{tag}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Fetching data from </span><span class="si">{from_ts}</span><span class="s2"> to </span><span class="si">{to_ts}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">query_string</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT &quot;</span><span class="si">{self.value_name}</span><span class="s2">&quot; as &quot;</span><span class="si">{tag}</span><span class="s2">&quot; </span>
+<span class="s2">            FROM &quot;</span><span class="si">{measurement}</span><span class="s2">&quot; </span>
+<span class="s2">            WHERE(&quot;tag&quot; =~ /^</span><span class="si">{tag}</span><span class="s2">$/) </span>
+<span class="s2">                {f&quot;AND time &gt;= {int(from_ts.timestamp())}s&quot; if from_ts else &quot;&quot;} </span>
+<span class="s2">                {f&quot;AND time &lt;= {int(to_ts.timestamp())}s&quot; if to_ts else &quot;&quot;}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Query string: </span><span class="si">{query_string}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">dataframes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_string</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dataframes</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
+
+        <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">list_of_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_of_tags_from_influx</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">list_of_tags</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;tag </span><span class="si">{tag}</span><span class="s2"> is not found in influx&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Unable to find data for tag </span><span class="si">{tag}</span><span class="s2"> in the time range </span><span class="si">{from_ts}</span><span class="s2"> - </span><span class="si">{to_ts}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span></div>
+
+    <span class="k">def</span> <span class="nf">_list_of_tags_from_influx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">query_tags</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;&quot;&quot;SHOW TAG VALUES ON </span><span class="si">{self.influx_client._database}</span><span class="s2"> WITH KEY=&quot;tag&quot; &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">influx_client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_tags</span><span class="p">)</span>
+        <span class="n">list_of_tags</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get_points</span><span class="p">()):</span>
+            <span class="n">list_of_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">list_of_tags</span>
+
+<div class="viewcode-block" id="InfluxDataProvider.get_list_of_tags"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.InfluxDataProvider.get_list_of_tags">[docs]</a>    <span class="nd">@cached</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="n">TTLCache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">600</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">get_list_of_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries Influx for the list of tags, using a TTL cache of 600 seconds. The</span>
+<span class="sd">        cache can be cleared with :func:`cache_clear()` as is usual with cachetools.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.List[str]</span>
+<span class="sd">            The list of tags in Influx</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_of_tags_from_influx</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="InfluxDataProvider.can_handle_tag"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.InfluxDataProvider.can_handle_tag">[docs]</a>    <span class="k">def</span> <span class="nf">can_handle_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">SensorTag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_tags</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="RandomDataProvider"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.RandomDataProvider">[docs]</a><span class="k">class</span> <span class="nc">RandomDataProvider</span><span class="p">(</span><span class="n">GordoBaseDataProvider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a GordoBaseDataset which returns unstructed values for X and y. Each instance</span>
+<span class="sd">    uses the same seed, so should be a function (same input -&gt; same output)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RandomDataProvider.can_handle_tag"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.RandomDataProvider.can_handle_tag">[docs]</a>    <span class="k">def</span> <span class="nf">can_handle_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">SensorTag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># We can be random about everything</span></div>
+
+    <span class="nd">@capture_args</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_size</span> <span class="o">=</span> <span class="n">max_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_size</span> <span class="o">=</span> <span class="n">min_size</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Thanks stackoverflow</span>
+    <span class="c1"># https://stackoverflow.com/questions/50559078/generating-random-dates-within-a-given-range-in-pandas</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_random_dates</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+        <span class="n">start_u</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">value</span> <span class="o">//</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+        <span class="n">end_u</span> <span class="o">=</span> <span class="n">end</span><span class="o">.</span><span class="n">value</span> <span class="o">//</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">start_u</span><span class="p">,</span> <span class="n">end_u</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="RandomDataProvider.load_series"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.providers.RandomDataProvider.load_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_list</span><span class="p">:</span>
+            <span class="n">nr</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size</span><span class="p">)</span>
+
+            <span class="n">random_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_dates</span><span class="p">(</span><span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">nr</span><span class="p">)</span>
+            <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="n">index</span><span class="o">=</span><span class="n">random_index</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">tag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">random_index</span><span class="p">)),</span>
+            <span class="p">)</span>
+            <span class="k">yield</span> <span class="n">series</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

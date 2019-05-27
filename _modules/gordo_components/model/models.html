@@ -1,0 +1,1108 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.model.models &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.model.models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.model.models</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span>
+
+<span class="kn">import</span> <span class="nn">keras.models</span>
+<span class="kn">import</span> <span class="nn">keras.backend</span> <span class="k">as</span> <span class="nn">K</span>
+<span class="kn">from</span> <span class="nn">keras.wrappers.scikit_learn</span> <span class="k">import</span> <span class="n">BaseWrapper</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">load_model</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">TransformerMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">explained_variance_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="k">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span> <span class="nn">gordo_components.model.base</span> <span class="k">import</span> <span class="n">GordoBase</span>
+
+
+<span class="c1"># This is required to run `register_model_builder` against registered factories</span>
+<span class="kn">from</span> <span class="nn">gordo_components.model.factories</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># pragma: no flakes</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.model.register</span> <span class="k">import</span> <span class="n">register_model_builder</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="possible_tf_mgmt"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.possible_tf_mgmt">[docs]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">possible_tf_mgmt</span><span class="p">(</span><span class="n">keras_model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator - When serving a Keras model backed by tensorflow, the object is expected</span>
+<span class="sd">    to have ``_tf_graph`` and ``_tf_session`` stored attrs. Which will be used as the</span>
+<span class="sd">    default when calling the Keras model</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Should only be needed by those developing new Keras models wrapped to behave like</span>
+<span class="sd">    Scikit-Learn Esitmators</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    keras_model: KerasBaseEstimator</span>
+<span class="sd">        An instance of a `KerasBaseEstimator` which can potentially have a tensorflow backend</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Keras backend: {K.backend()}&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;tensorflow&quot;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Using keras_model </span><span class="si">{keras_model}</span><span class="s2"> local TF Graph and Session&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">keras_model</span><span class="o">.</span><span class="n">_tf_graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">(),</span> <span class="n">keras_model</span><span class="o">.</span><span class="n">_tf_session</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+            <span class="k">yield</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">yield</span></div>
+
+
+<div class="viewcode-block" id="KerasBaseEstimator"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasBaseEstimator">[docs]</a><span class="k">class</span> <span class="nc">KerasBaseEstimator</span><span class="p">(</span><span class="n">BaseWrapper</span><span class="p">,</span> <span class="n">GordoBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">]],</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized a Scikit-Learn API compatitble Keras model with a pre-registered function or a builder function</span>
+<span class="sd">        directly.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kind: Union[callable, str]</span>
+<span class="sd">            The structure of the model to build. As designated by any registered builder</span>
+<span class="sd">            functions, registered with gordo_compontents.model.register.register_model_builder</span>
+<span class="sd">            Alternatively, one may pass a builder function directly to this argument. Such a</span>
+<span class="sd">            function should accept `n_features` as it&#39;s first argument, and pass any additional</span>
+<span class="sd">            parameters to `**kwargs`</span>
+
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            Any additional args which are passed to the factory</span>
+<span class="sd">            building function and/or any additional args to be passed</span>
+<span class="sd">            to Keras&#39; fit() method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Tensorflow requires managed graph/session as to not default to global</span>
+        <span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;tensorflow&quot;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Keras backend detected as tensorflow, keeping local graph&quot;</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tf_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tf_session</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tf_graph</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Keras backend detected as NOT tensorflow, but: {K.backend()}&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tf_session</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tf_graph</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_fn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">kind</span><span class="p">):</span>
+            <span class="n">register_model_builder</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">class_name</span><span class="p">)(</span><span class="n">kind</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">register_model_builder</span><span class="o">.</span><span class="n">factories</span><span class="p">[</span><span class="n">class_name</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s2">&quot;kind: </span><span class="si">{kind}</span><span class="s2"> is not an available model for type: </span><span class="si">{class_name}</span><span class="s2">!&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sk_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters used for scikit learn kwargs&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>
+
+<div class="viewcode-block" id="KerasBaseEstimator.fit"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasBaseEstimator.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the model to X given y.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">            numpy array or pandas dataframe</span>
+<span class="sd">        y: np.ndarray</span>
+<span class="sd">            numpy array or pandas dataframe</span>
+<span class="sd">        sample_weight: np.ndarray</span>
+<span class="sd">            array like - weight to assign to samples</span>
+<span class="sd">        kwargs</span>
+<span class="sd">            Any additional kwargs to supply to keras fit method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">            &#39;KerasAutoEncoder&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Fitting to data of length: {len(X)}&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;n_features&quot;</span><span class="p">:</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
+        <span class="c1"># for LSTM based models</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;n_features&quot;</span><span class="p">:</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]})</span>
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="KerasBaseEstimator.get_params"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasBaseEstimator.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the parameters for this estimator</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params</span>
+<span class="sd">            ignored (exists for API compatibility).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Parameters used in this estimator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">})</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">params</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">build_fn</span> <span class="o">=</span> <span class="n">register_model_builder</span><span class="o">.</span><span class="n">factories</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">build_fn</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">sk_params</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KerasBaseEstimator.save_to_dir"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasBaseEstimator.save_to_dir">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;params.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;model.h5&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;history&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">history</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">f_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;history.pkl&quot;</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f_name</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">history_file</span><span class="p">:</span>
+                        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">history_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KerasBaseEstimator.load_from_dir"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasBaseEstimator.load_from_dir">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load_from_dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load an instance of this class from a directory, such that it was dumped to</span>
+<span class="sd">        using :func:`gordo_components.model.models.KerasBaseEstimator.save_to_dir`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        directory: str</span>
+<span class="sd">            The directory to save this model to, must have write access</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;params.json&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">model_file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;model.h5&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">model_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">set_learning_phase</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">model_file</span><span class="p">)</span>
+                <span class="n">history_file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;history.pkl&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">history_file</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">history_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hist_f</span><span class="p">:</span>
+                        <span class="n">obj</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">hist_f</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="KerasBaseEstimator.get_metadata"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasBaseEstimator.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get metadata for the KerasBaseEstimator.</span>
+<span class="sd">        Includes a dictionary with key &quot;history&quot;. The key&#39;s value is a a dictionary</span>
+<span class="sd">        with a key &quot;params&quot; pointing another dictionary with various parameters.</span>
+<span class="sd">        The metrics are defined in the params dictionary under &quot;metrics&quot;.</span>
+<span class="sd">        For each of the metrics there is a key who&#39;s value is a list of values for this</span>
+<span class="sd">        metric per epoch.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict</span>
+<span class="sd">            Metadata dictionary, including a history object if present</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;history&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">history</span>
+        <span class="p">):</span>
+            <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">history</span>
+            <span class="n">history</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">params</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span></div></div>
+
+
+<div class="viewcode-block" id="KerasAutoEncoder"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasAutoEncoder">[docs]</a><span class="k">class</span> <span class="nc">KerasAutoEncoder</span><span class="p">(</span><span class="n">KerasBaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subclass of the KerasBaseEstimator to allow fitting to just X without requiring y.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="KerasAutoEncoder.fit"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasAutoEncoder.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;KerasAutoEncoder&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;This is an AutoEncoder and does not care about a &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;target, but a y was supplied. It will be ignored!&quot;</span>
+            <span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="KerasAutoEncoder.transform"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasAutoEncoder.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">            Input data</span>
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            kwargs which are passed to Kera&#39;s ``predict`` method</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        results:</span>
+<span class="sd">            np.ndarray</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The data returns from this method is double the feature length of its input.</span>
+<span class="sd">        The first half of each sample output is the _input_ of the model, and the</span>
+<span class="sd">        output is concatenated (axis=1) with the input. ie. If the input has 4 features,</span>
+<span class="sd">        the output will have 8, where the first 4 are the values which went into the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">xhat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sample_input</span><span class="p">,</span> <span class="n">sample_output</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">xhat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="n">sample_input</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sample_output</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KerasAutoEncoder.score"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasAutoEncoder.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sample_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explained variance score between auto encoder&#39;s input vs output</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: Union[np.ndarray, pd.DataFrame]</span>
+<span class="sd">            Input data to the model</span>
+<span class="sd">        y: Union[np.ndarray, pd.DataFrame]</span>
+<span class="sd">            Target</span>
+<span class="sd">        sample_weight: Optional[np.ndarray]</span>
+<span class="sd">            sample weights</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        score: float</span>
+<span class="sd">            Returns the explained variance score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;This </span><span class="si">{self.__class__.__name__}</span><span class="s2"> has not been fitted yet.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">explained_variance_score</span><span class="p">(</span><span class="n">X</span> <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">y</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="KerasLSTMBaseEstimator"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMBaseEstimator">[docs]</a><span class="k">class</span> <span class="nc">KerasLSTMBaseEstimator</span><span class="p">(</span><span class="n">KerasBaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract Base Class to allow to train a many-one LSTM autoencoder and an LSTM</span>
+<span class="sd">    1 step forecast</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">lookback_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kind: Union[Callable, str]</span>
+<span class="sd">            The structure of the model to build. As designated by any registered builder</span>
+<span class="sd">            functions, registered with gordo_components.model.register.register_model_builder</span>
+<span class="sd">            Alternatively, one may pass a builder function directly to this argument. Such a</span>
+<span class="sd">            function should accept `n_features` as it&#39;s first argument, and pass any additional</span>
+<span class="sd">            parameters to `**kwargs`.</span>
+<span class="sd">        lookback_window: int</span>
+<span class="sd">            Number of timestamps (lags) used to train the model.</span>
+<span class="sd">        batch_size: int</span>
+<span class="sd">            Number of training examples used in one epoch.</span>
+<span class="sd">        epochs: int</span>
+<span class="sd">            Number of epochs to train the model. An epoch is an iteration over the entire</span>
+<span class="sd">            data provided.</span>
+<span class="sd">        verbose: int</span>
+<span class="sd">            Verbosity mode. Possible values are 0, 1, or 2 where 0 = silent, 1 = progress bar,</span>
+<span class="sd">            2 = one line per epoch.</span>
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            Any arguments which are passed to the factory building function and/or any</span>
+<span class="sd">            additional args to be passed to the intermediate fit method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># default 1 for steps_per_epoch is only used to initiate an integer-type value. Actual value will be computed</span>
+        <span class="c1"># later</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># type: int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">=</span> <span class="n">lookback_window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;lookback_window&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lookback_window</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_size</span>
+
+        <span class="c1"># fit_generator_params is a set of strings with the keyword arguments of Keras fit_generator method (excluding</span>
+        <span class="c1"># &quot;shuffle&quot; as this will be hard coded).  This will be used in the fit method of the respective subclasses</span>
+        <span class="c1"># to match the kwargs supplied when instantiating the subclass.</span>
+        <span class="c1"># The matched kwargs will override the default kwargs of Keras fit_generator method when training the model.</span>
+        <span class="c1"># Note: The decorator &quot;@interfaces.legacy_generator_methods_support&quot; to Keras&#39; fit_generator method</span>
+        <span class="c1"># does not forward any arguments to the inspect module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_generator_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;steps_per_epoch&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;epochs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;verbose&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;callbacks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;validation_data&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;validation_steps&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;validation_freq&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;class_weight&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;max_queue_size&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;workers&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;use_multiprocessing&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;initial_epoch&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KerasLSTMBaseEstimator.generate_window"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMBaseEstimator.generate_window">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">generate_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="o">...</span></div>
+
+    <span class="k">def</span> <span class="nf">_reshape_samples</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_feat</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sample_in</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sample_out</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is used to reshape one input sample to a 3D array of size 1 x lookback_window x number_features</span>
+<span class="sd">        and one output sample to a 2D array of size 1 x number_features.  Such reshapes are required</span>
+<span class="sd">        for the fit method (in Keras fit_generator).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_feat: int</span>
+<span class="sd">            number of features</span>
+<span class="sd">        sample_in: np.ndarray</span>
+<span class="sd">            2D numpy array.  One input sample of dimension lookback_window x n_features</span>
+<span class="sd">        sample_out: np.ndarray</span>
+<span class="sd">            1D numpy array. One output sample of dimension 1 x n_features</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        reshaped input/output samples. A tuple of length 2 with first element being the reshaped</span>
+<span class="sd">        input sample and the second element the reshaped output sample.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">sample_in</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span><span class="p">,</span> <span class="n">n_feat</span><span class="p">)),</span>
+            <span class="n">sample_out</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_feat</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="KerasLSTMBaseEstimator.calc_steps_per_epoch"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMBaseEstimator.calc_steps_per_epoch">[docs]</a>    <span class="k">def</span> <span class="nf">calc_steps_per_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method calculates the number of steps to yield from the generator prior to declaring one epoch</span>
+<span class="sd">        finished and starting the next epoch.</span>
+
+<span class="sd">        References</span>
+<span class="sd">            https://keras.io/models/model/#fit_generator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_epoch</span></div></div>
+
+
+<div class="viewcode-block" id="KerasLSTMAutoEncoder"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMAutoEncoder">[docs]</a><span class="k">class</span> <span class="nc">KerasLSTMAutoEncoder</span><span class="p">(</span><span class="n">KerasLSTMBaseEstimator</span><span class="p">):</span>
+<div class="viewcode-block" id="KerasLSTMAutoEncoder.generate_window"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMAutoEncoder.generate_window">[docs]</a>    <span class="k">def</span> <span class="nf">generate_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">           2D numpy array of dimension n_samples x n_features. Data used to train model or predict/transform values</span>
+<span class="sd">           from fitted model.</span>
+<span class="sd">        output_y: bool</span>
+<span class="sd">            If true, sample_in and sample_out for Keras LSTM fit_generator will be generated,</span>
+<span class="sd">            If false, sample_in for Keras LSTM predict_generator will be generated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        if output_y is True, it returns a tuple of length 2 with first element being one input sample and second element</span>
+<span class="sd">        one corresponding output sample.</span>
+<span class="sd">        The input sample is a 3D np array. Each iterate generates a window of data points of</span>
+<span class="sd">        size 1 x lookback_window x n_features to use within fit/transform methods.</span>
+<span class="sd">        Note: If all input samples are generated (when for example using Keras LSTM fit_generator) their form is given</span>
+<span class="sd">        by: np.array([X[0 : lookback_window], X[1 : lookback_window+1],...])</span>
+<span class="sd">        The output sample is the last data point on the input sample, reshaped to a 2D np array</span>
+<span class="sd">        of size 1 x n_features.</span>
+<span class="sd">        Note:  If all output samples generated (when for example using Keras LSTM fit_generator) their form is given by</span>
+<span class="sd">        np.array([X[lookback_window-1], X[lookback_window],...])</span>
+
+
+<span class="sd">        if output_y is False then only the input sample is returned.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.models import KerasLSTMAutoEncoder</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.factories import lstm_autoencoder</span>
+<span class="sd">        &gt;&gt;&gt; X = np.array([[1,0.1],[0.5,0.7],[2,1],[1,1.5]])</span>
+<span class="sd">        &gt;&gt;&gt; X</span>
+<span class="sd">        array([[1. , 0.1],</span>
+<span class="sd">               [0.5, 0.7],</span>
+<span class="sd">               [2. , 1. ],</span>
+<span class="sd">               [1. , 1.5]])</span>
+<span class="sd">        &gt;&gt;&gt; lookback_window = 2</span>
+<span class="sd">        &gt;&gt;&gt; model=KerasLSTMAutoEncoder(kind=lstm_autoencoder.lstm_hourglass,lookback_window=lookback_window)</span>
+<span class="sd">        &gt;&gt;&gt; gen = model.generate_window(X)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample1, output_sample1 = next(gen)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample2, output_sample2 = next(gen)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample3, output_sample3 = next(gen)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample1</span>
+<span class="sd">        array([[[1. , 0.1],</span>
+<span class="sd">                [0.5, 0.7]]])</span>
+<span class="sd">        &gt;&gt;&gt; output_sample1</span>
+<span class="sd">        array([[0.5, 0.7]])</span>
+<span class="sd">        &gt;&gt;&gt; input_sample2</span>
+<span class="sd">        array([[[0.5, 0.7],</span>
+<span class="sd">                [2. , 1. ]]])</span>
+<span class="sd">        &gt;&gt;&gt; output_sample2</span>
+<span class="sd">        array([[2., 1.]])</span>
+<span class="sd">        &gt;&gt;&gt; input_sample3</span>
+<span class="sd">        array([[[2. , 1. ],</span>
+<span class="sd">                [1. , 1.5]]])</span>
+<span class="sd">        &gt;&gt;&gt; output_sample3</span>
+<span class="sd">        array([[1. , 1.5]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_feat</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="n">sample_in</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span>
+                <span class="n">sample_out</span> <span class="o">=</span> <span class="n">sample_in</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reshape_samples</span><span class="p">(</span><span class="n">n_feat</span><span class="p">,</span> <span class="n">sample_in</span><span class="p">,</span> <span class="n">sample_out</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">output_y</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">samples</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_validate_size_of_X</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">&gt;</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;For KerasLSTMAutoEncoder lookback_window must be &lt;= size of X&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="KerasLSTMAutoEncoder.fit"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMAutoEncoder.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;KerasLSTMAutoEncoder&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This fits a many-to-one LSTM architecture using Keras fit_generator method. For</span>
+<span class="sd">        further details on the input/output samples fed to this method, refer to the generate_window</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">           2D numpy array of dimension n_samples x n_features. Input data to train.</span>
+<span class="sd">        y: Optional[np.ndarray]</span>
+<span class="sd">           This is an LSTM Autoencoder which does not need a y. Thus it will be ignored.</span>
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            Any additional args to be passed to Keras fit_generator method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        class:</span>
+<span class="sd">            KerasLSTMAutoEncoder</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;This is a many-to-one LSTM AutoEncoder that does not need a &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;target, but a y was supplied. It will not be used.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_size_of_X</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_window</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">output_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">):</span>
+            <span class="c1"># these are only used for the intermediate fit method (fit method of KerasBaseEstimator),</span>
+            <span class="c1"># called only to initiate the model</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">*</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">),</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_steps_per_epoch</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;steps_per_epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steps_per_epoch</span>
+
+        <span class="n">gen_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_generator_params</span>
+        <span class="p">}</span>
+
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c1"># shuffle is set to False since we are dealing with time series data and</span>
+            <span class="c1"># so training data will not be shuffled before each epoch.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">gen_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="KerasLSTMAutoEncoder.transform"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMAutoEncoder.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">         X: np.ndarray</span>
+<span class="sd">            2D numpy array of dimension n_samples x n_features where n_samples must be &gt;= lookback_window.</span>
+<span class="sd">            Data to autoencode.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        results: np.ndarray</span>
+<span class="sd">                 2D numpy array of dimension (n_samples - (lookback_window - 1)) x 2*n_features.  The first half</span>
+<span class="sd">                 of the array (results[:,:n_features]) corresponds to X offset by the lookback_window</span>
+<span class="sd">                 (i.e., X[lookback_window - 1:,:]) whereas the second half corresponds to the autoencoded values</span>
+<span class="sd">                 of X[lookback_window - 1:,:].</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; import tensorflow as tf</span>
+<span class="sd">        &gt;&gt;&gt; import random as rn</span>
+<span class="sd">        &gt;&gt;&gt; from keras import backend as K</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.factories.lstm_autoencoder import lstm_model</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.models import KerasLSTMAutoEncoder</span>
+<span class="sd">        &gt;&gt;&gt; #Setting seeds to get reproducible results</span>
+<span class="sd">        &gt;&gt;&gt; session_conf = tf.ConfigProto(intra_op_parallelism_threads=1,</span>
+<span class="sd">        ...                               inter_op_parallelism_threads=1)</span>
+<span class="sd">        &gt;&gt;&gt; sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)</span>
+<span class="sd">        &gt;&gt;&gt; K.set_session(sess)</span>
+<span class="sd">        &gt;&gt;&gt; np.random.seed(42)</span>
+<span class="sd">        &gt;&gt;&gt; rn.seed(12345)</span>
+<span class="sd">        &gt;&gt;&gt; tf.set_random_seed(1234)</span>
+<span class="sd">        &gt;&gt;&gt; #Define train/test data</span>
+<span class="sd">        &gt;&gt;&gt; X_train = np.array([[1, 1], [2, 3], [0.5, 0.6], [0.3, 1], [0.6, 0.7]])</span>
+<span class="sd">        &gt;&gt;&gt; X_test = np.array([[2, 3], [1, 1], [0.1, 1], [0.5, 2]])</span>
+<span class="sd">        &gt;&gt;&gt; #Initiate model, fit and transform</span>
+<span class="sd">        &gt;&gt;&gt; lstm_ae = KerasLSTMAutoEncoder(kind=&quot;lstm_model&quot;, lookback_window=2, verbose=0)</span>
+<span class="sd">        &gt;&gt;&gt; model_fit = lstm_ae.fit(X_train)</span>
+<span class="sd">        &gt;&gt;&gt; model_transform = lstm_ae.transform(X_test)</span>
+<span class="sd">        &gt;&gt;&gt; output_example = np.array([[1., 1., 0.00503557, 0.00501121],[0.1, 1.,0.00503096, 0.00500809],</span>
+<span class="sd">        ...                                        [0.5, 2.,0.00503031, 0.00500737]]) #Note: output can be non</span>
+<span class="sd">        ...                                                                           #deterministic so an example</span>
+<span class="sd">        ...                                                                           #output is provided</span>
+<span class="sd">        &gt;&gt;&gt; model_transform.shape</span>
+<span class="sd">        (3, 4)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_size_of_X</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_window</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">output_y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">xhat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_generator</span><span class="p">(</span>
+                <span class="n">gen</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sample_input</span><span class="p">,</span> <span class="n">sample_output</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">xhat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="n">sample_input</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sample_output</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KerasLSTMAutoEncoder.score"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMAutoEncoder.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sample_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explained variance score between auto encoder&#39;s input vs output</span>
+<span class="sd">        (note: for LSTM X is offset by lookback_window - 1).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: Union[np.ndarray, pd.DataFrame]</span>
+<span class="sd">            Input data to the model.</span>
+<span class="sd">        y: Union[np.ndarray, pd.DataFrame]</span>
+<span class="sd">            Target</span>
+<span class="sd">        sample_weight: Optional[np.ndarray]</span>
+<span class="sd">            Sample weights</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        score: float</span>
+<span class="sd">            Returns the explained variance score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;This </span><span class="si">{self.__class__.__name__}</span><span class="s2"> has not been fitted yet.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">explained_variance_score</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="p">:</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">out</span><span class="p">[:,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:])</span></div></div>
+
+
+<div class="viewcode-block" id="KerasLSTMForecast"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMForecast">[docs]</a><span class="k">class</span> <span class="nc">KerasLSTMForecast</span><span class="p">(</span><span class="n">KerasLSTMBaseEstimator</span><span class="p">):</span>
+<div class="viewcode-block" id="KerasLSTMForecast.get_metadata"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMForecast.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add number of forecast steps to metadata</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metadata: dict</span>
+<span class="sd">            Metadata dictionary, including forecast steps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">forecast_steps</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;forecast_steps&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
+        <span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">forecast_steps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">metadata</span></div>
+
+<div class="viewcode-block" id="KerasLSTMForecast.generate_window"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMForecast.generate_window">[docs]</a>    <span class="k">def</span> <span class="nf">generate_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">           2D numpy array of dimension n_samples x n_features. Data used to train model or predict/transform values</span>
+<span class="sd">           from fitted model.</span>
+<span class="sd">        output_y: bool</span>
+<span class="sd">            If true, sample_in and sample_out for Keras LSTM fit_generator will be generated,</span>
+<span class="sd">            If false, sample_in for Keras LSTM predict_generator will be generated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        If output_y is True, it returns a tuple of length 2 with the first element being the input sample and</span>
+<span class="sd">        the second element being the output sample.</span>
+
+<span class="sd">        The input sample is a 3D np array. Each iterate generates a window of data points of</span>
+<span class="sd">        size 1 x lookback_window x n_features to use within fit/transform methods.</span>
+<span class="sd">        Note: If all input samples are generated (when for example using Keras LSTM fit_generator) their form is given</span>
+<span class="sd">        by: np.array([X[0 : lookback_window], X[1 : lookback_window+1],...])</span>
+<span class="sd">        The output sample is X[lookback+i,:], where i is the index of the current window (i.e. the (lookback_window+i)th</span>
+<span class="sd">        sample from X)</span>
+<span class="sd">        Note: If all output samples generated (when for example using Keras LSTM fit_generator) their form is given by</span>
+<span class="sd">        np.array([X[lookback_window], X[lookback_window+1],...])</span>
+
+<span class="sd">        If output_y is False then only the input sample is returned.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.models import KerasLSTMForecast</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.factories import lstm_autoencoder</span>
+<span class="sd">        &gt;&gt;&gt; X = np.array([[1,0.1],[0.5,0.7],[2,1],[1,1.5]])</span>
+<span class="sd">        &gt;&gt;&gt; X</span>
+<span class="sd">        array([[1. , 0.1],</span>
+<span class="sd">               [0.5, 0.7],</span>
+<span class="sd">               [2. , 1. ],</span>
+<span class="sd">               [1. , 1.5]])</span>
+<span class="sd">        &gt;&gt;&gt; lookback_window = 2</span>
+<span class="sd">        &gt;&gt;&gt; model=KerasLSTMForecast(kind=lstm_autoencoder.lstm_hourglass,lookback_window=lookback_window)</span>
+<span class="sd">        &gt;&gt;&gt; gen = model.generate_window(X)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample1, output_sample1 = next(gen)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample2, output_sample2 = next(gen)</span>
+<span class="sd">        &gt;&gt;&gt; input_sample1</span>
+<span class="sd">        array([[[1. , 0.1],</span>
+<span class="sd">                [0.5, 0.7]]])</span>
+<span class="sd">        &gt;&gt;&gt; output_sample1</span>
+<span class="sd">        array([[2., 1.]])</span>
+<span class="sd">        &gt;&gt;&gt; input_sample2</span>
+<span class="sd">        array([[[0.5, 0.7],</span>
+<span class="sd">                [2. , 1. ]]])</span>
+<span class="sd">        &gt;&gt;&gt; output_sample2</span>
+<span class="sd">        array([[1. , 1.5]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">n_feat</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span><span class="p">):</span>
+                <span class="n">sample_in</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span>
+                <span class="n">sample_out</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reshape_samples</span><span class="p">(</span><span class="n">n_feat</span><span class="p">,</span> <span class="n">sample_in</span><span class="p">,</span> <span class="n">sample_out</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">output_y</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">samples</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_validate_size_of_X</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="o">&gt;=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;For KerasLSTMForecast lookback_window must be &lt; size of X&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="KerasLSTMForecast.fit"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMForecast.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;KerasLSTMForecast&quot;</span><span class="p">:</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This fits a one step forecast LSTM architecture using Keras fit_generator method.  For further details</span>
+<span class="sd">        on the input/output samples fed to this method, refer to the generate_window method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">           2D numpy array of dimension n_samples x n_features. Input data to train.</span>
+<span class="sd">        y: np.ndarray</span>
+<span class="sd">           This is a forecast based LSTM model which does not need a y. Thus it will be ignored.</span>
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            Any additional args to be passed to Keras fit_generator method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        class:</span>
+<span class="sd">            KerasLSTMForecast</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;This is a forecast based LSTM model that does not need a &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;target, but a y was supplied. It will not be used.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_size_of_X</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_window</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">output_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">):</span>
+            <span class="c1"># these are only used for the intermediate fit method (fit method of KerasBaseEstimator),</span>
+            <span class="c1"># called only to initiate the model</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">*</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">),</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_steps_per_epoch</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;steps_per_epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steps_per_epoch</span>
+
+        <span class="n">gen_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_generator_params</span>
+        <span class="p">}</span>
+
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c1"># shuffle is set to False since we are dealing with time series data and</span>
+            <span class="c1"># so training data will not be shuffled before each epoch.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">gen_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="KerasLSTMForecast.transform"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMForecast.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">         X: np.ndarray</span>
+<span class="sd">            2D numpy array of dimension n_samples x n_features where n_samples must be &gt; lookback_window.</span>
+<span class="sd">            Data to predict/transform.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        results: np.ndarray</span>
+<span class="sd">                 2D numpy array of dimension (n_samples - lookback_window) x 2*n_features.  The first half</span>
+<span class="sd">                 of the array (results[:,:n_features]) corresponds to X offset by lookback_window+1</span>
+<span class="sd">                 (i.e., X[lookback_window:,:]) whereas the second half corresponds to the predicted values</span>
+<span class="sd">                 of X[lookback_window:,:].</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; import tensorflow as tf</span>
+<span class="sd">        &gt;&gt;&gt; import random as rn</span>
+<span class="sd">        &gt;&gt;&gt; from keras import backend as K</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.factories.lstm_autoencoder import lstm_model</span>
+<span class="sd">        &gt;&gt;&gt; from gordo_components.model.models import KerasLSTMForecast</span>
+<span class="sd">        &gt;&gt;&gt; #Setting seeds to get reproducible results</span>
+<span class="sd">        &gt;&gt;&gt; session_conf = tf.ConfigProto(intra_op_parallelism_threads=1,</span>
+<span class="sd">        ...                               inter_op_parallelism_threads=1)</span>
+<span class="sd">        &gt;&gt;&gt; sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)</span>
+<span class="sd">        &gt;&gt;&gt; K.set_session(sess)</span>
+<span class="sd">        &gt;&gt;&gt; np.random.seed(42)</span>
+<span class="sd">        &gt;&gt;&gt; rn.seed(12345)</span>
+<span class="sd">        &gt;&gt;&gt; tf.set_random_seed(1234)</span>
+<span class="sd">        &gt;&gt;&gt; #Define train/test data</span>
+<span class="sd">        &gt;&gt;&gt; X_train = np.array([[1, 1], [2, 3], [0.5, 0.6], [0.3, 1], [0.6, 0.7]])</span>
+<span class="sd">        &gt;&gt;&gt; X_test = np.array([[2, 3], [1, 1], [0.1, 1], [0.5, 2]])</span>
+<span class="sd">        &gt;&gt;&gt; #Initiate model, fit and transform</span>
+<span class="sd">        &gt;&gt;&gt; lstm_ae = KerasLSTMForecast(kind=&quot;lstm_model&quot;, lookback_window=2, verbose=0)</span>
+<span class="sd">        &gt;&gt;&gt; model_fit = lstm_ae.fit(X_train)</span>
+<span class="sd">        &gt;&gt;&gt; model_transform = lstm_ae.transform(X_test)</span>
+<span class="sd">        &gt;&gt;&gt; output_example = np.array([[0.1       , 1.        , 0.00467027, 0.00561625],</span>
+<span class="sd">        ...                            [0.5       , 2.        , 0.00466603, 0.00561359]]) #Note: output can be non</span>
+<span class="sd">        ...                                                                               #deterministic so an example</span>
+<span class="sd">        ...                                                                               #output is provided</span>
+<span class="sd">        &gt;&gt;&gt; model_transform.shape</span>
+<span class="sd">        (2, 4)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_size_of_X</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_window</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">output_y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">possible_tf_mgmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">xhat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_generator</span><span class="p">(</span>
+                <span class="n">gen</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span>
+            <span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lookback_window</span> <span class="p">:]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sample_input</span><span class="p">,</span> <span class="n">sample_output</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">xhat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="n">sample_input</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sample_output</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KerasLSTMForecast.score"><a class="viewcode-back" href="../../../components/model/model.html#gordo_components.model.models.KerasLSTMForecast.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sample_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explained variance score between 1 step forecasted input and true input at next time step</span>
+<span class="sd">        (note: for LSTM X is offset by lookback_window).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: Union[np.ndarray, pd.DataFrame]</span>
+<span class="sd">            Input data to the model.</span>
+<span class="sd">        y: Union[np.ndarray, pd.DataFrame]</span>
+<span class="sd">            Target</span>
+<span class="sd">        sample_weight: Optional[np.ndarray]</span>
+<span class="sd">            Sample weights</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        score: float</span>
+<span class="sd">            Returns the explained variance score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;This </span><span class="si">{self.__class__.__name__}</span><span class="s2"> has not been fitted yet.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">explained_variance_score</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="p">:</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">out</span><span class="p">[:,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:])</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

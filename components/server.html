@@ -1,0 +1,471 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ML Server &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CLI" href="cli.html" />
+    <link rel="prev" title="Watchman" href="watchman.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="watchman.html">Watchman</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ML Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.server.server">Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>ML Server</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/server.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ml-server">
+<h1>ML Server<a class="headerlink" href="#ml-server" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gordo_components.server.server">
+<span id="server"></span><h2>Server<a class="headerlink" href="#module-gordo_components.server.server" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gordo_components.server.server.Api">
+<em class="property">class </em><code class="descclassname">gordo_components.server.server.</code><code class="descname">Api</code><span class="sig-paren">(</span><em>app=None</em>, <em>version='1.0'</em>, <em>title=None</em>, <em>description=None</em>, <em>terms_url=None</em>, <em>license=None</em>, <em>license_url=None</em>, <em>contact=None</em>, <em>contact_url=None</em>, <em>contact_email=None</em>, <em>authorizations=None</em>, <em>security=None</em>, <em>doc='/'</em>, <em>default_id=&lt;function default_id&gt;</em>, <em>default='default'</em>, <em>default_label='Default namespace'</em>, <em>validate=None</em>, <em>tags=None</em>, <em>prefix=''</em>, <em>ordered=False</em>, <em>default_mediatype='application/json'</em>, <em>decorators=None</em>, <em>catch_all_404s=False</em>, <em>serve_challenge_on_401=False</em>, <em>format_checker=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#Api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.Api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_restplus.api.Api</span></code></p>
+<dl class="attribute">
+<dt id="gordo_components.server.server.Api.specs_url">
+<code class="descname">specs_url</code><a class="headerlink" href="#gordo_components.server.server.Api.specs_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Swagger specifications absolute url (ie. <cite>swagger.json</cite>)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.server.server.Config">
+<em class="property">class </em><code class="descclassname">gordo_components.server.server.</code><code class="descname">Config</code><a class="reference internal" href="../_modules/gordo_components/server/server.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Server config</p>
+<dl class="attribute">
+<dt id="gordo_components.server.server.Config.MODEL_LOCATION_ENV_VAR">
+<code class="descname">MODEL_LOCATION_ENV_VAR</code><em class="property"> = 'MODEL_LOCATION'</em><a class="headerlink" href="#gordo_components.server.server.Config.MODEL_LOCATION_ENV_VAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.server.server.DownloadModel">
+<em class="property">class </em><code class="descclassname">gordo_components.server.server.</code><code class="descname">DownloadModel</code><span class="sig-paren">(</span><em>api=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#DownloadModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.DownloadModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_restplus.resource.Resource</span></code></p>
+<p>Download the trained model</p>
+<p>suitable for reloading via <code class="docutils literal notranslate"><span class="pre">gordo_components.serializer.loads()</span></code></p>
+<dl class="method">
+<dt id="gordo_components.server.server.DownloadModel.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#DownloadModel.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.DownloadModel.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Responds with a serialized copy of the current model being served.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Results from <code class="docutils literal notranslate"><span class="pre">gordo_components.serializer.dumps()</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.server.server.DownloadModel.methods">
+<code class="descname">methods</code><em class="property"> = {'GET'}</em><a class="headerlink" href="#gordo_components.server.server.DownloadModel.methods" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.server.server.MetaDataView">
+<em class="property">class </em><code class="descclassname">gordo_components.server.server.</code><code class="descname">MetaDataView</code><span class="sig-paren">(</span><em>api=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#MetaDataView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.MetaDataView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_restplus.resource.Resource</span></code></p>
+<p>Serve model / server metadata</p>
+<dl class="method">
+<dt id="gordo_components.server.server.MetaDataView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#MetaDataView.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.MetaDataView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get metadata about this endpoint, also serves as /healthcheck endpoint</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.server.server.MetaDataView.methods">
+<code class="descname">methods</code><em class="property"> = {'GET'}</em><a class="headerlink" href="#gordo_components.server.server.MetaDataView.methods" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.server.server.PredictionApiView">
+<em class="property">class </em><code class="descclassname">gordo_components.server.server.</code><code class="descname">PredictionApiView</code><span class="sig-paren">(</span><em>api=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#PredictionApiView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.PredictionApiView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_restplus.resource.Resource</span></code></p>
+<p>Serve model predictions via GET and POST methods</p>
+<dl class="docutils">
+<dt>If <code class="docutils literal notranslate"><span class="pre">GET</span></code></dt>
+<dd><p class="first">Will take a <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> ISO format datetime string
+and give back predictions in the following example:</p>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="s1">&#39;2016-01-01 00:20:00+00:00&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="s1">&#39;2016-01-01 00:10:00+00:00&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;tag-0&#39;</span><span class="p">:</span> <span class="mf">0.6031807382481357</span><span class="p">,</span>
+              <span class="s1">&#39;tag-1&#39;</span><span class="p">:</span> <span class="mf">0.6850933943812884</span><span class="p">,</span>
+              <span class="s1">&#39;tag-2&#39;</span><span class="p">:</span> <span class="mf">0.37281826556659486</span><span class="p">,</span>
+              <span class="s1">&#39;tag-3&#39;</span><span class="p">:</span> <span class="mf">0.6688453143800668</span><span class="p">,</span>
+              <span class="s1">&#39;tag-4&#39;</span><span class="p">:</span> <span class="mf">0.3860472585679212</span><span class="p">,</span>
+              <span class="s1">&#39;tag-5&#39;</span><span class="p">:</span> <span class="mf">0.6704775418728366</span><span class="p">,</span>
+              <span class="s1">&#39;tag-6&#39;</span><span class="p">:</span> <span class="mf">0.36539023141775234</span><span class="p">,</span>
+              <span class="s1">&#39;tag-7&#39;</span><span class="p">:</span> <span class="mf">0.929348645859519</span><span class="p">,</span>
+              <span class="s1">&#39;tag-8&#39;</span><span class="p">:</span> <span class="mf">0.555020406599076</span><span class="p">,</span>
+              <span class="s1">&#39;tag-9&#39;</span><span class="p">:</span> <span class="mf">0.3908480506569232</span><span class="p">},</span>
+     <span class="s1">&#39;total_anomaly&#39;</span><span class="p">:</span> <span class="mf">1.8644325873977061</span><span class="p">}</span>
+ <span class="p">],</span>
+ <span class="s1">&#39;status-code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+ <span class="s1">&#39;time-seconds&#39;</span><span class="p">:</span> <span class="s1">&#39;2.5015&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+<dt>if <code class="docutils literal notranslate"><span class="pre">POST</span></code></dt>
+<dd><p class="first">Will take the raw data in <code class="docutils literal notranslate"><span class="pre">X</span></code> and expected to be of the correct shape.
+This is much lower level, and reflects that raw input for the model.</p>
+<p>Returned example format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.9620815728153441</span><span class="p">,</span>
+     <span class="mf">0.48481952794697486</span><span class="p">,</span>
+     <span class="mf">0.10449727234407678</span><span class="p">,</span>
+     <span class="mf">0.5820399931840917</span><span class="p">,],</span>
+    <span class="p">[</span><span class="mf">0.7328459309239063</span><span class="p">,</span>
+     <span class="mf">0.7933340297343985</span><span class="p">,</span>
+     <span class="mf">0.4012604048104457</span><span class="p">,</span>
+     <span class="mf">0.9799145817366233</span><span class="p">,],</span>
+ <span class="s1">&#39;status-code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+ <span class="s1">&#39;time-seconds&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0568&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p class="last">where <code class="docutils literal notranslate"><span class="pre">output</span></code> represents the actual output of the model.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gordo_components.server.server.PredictionApiView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#PredictionApiView.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.PredictionApiView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.server.server.PredictionApiView.get_predictions">
+<code class="descname">get_predictions</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/gordo_components/server/server.html#PredictionApiView.get_predictions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.PredictionApiView.get_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the raw output from the current model given X.
+Will try to <cite>predict</cite> and then <cite>transform</cite>, raising an error
+if both fail.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>np.ndarray</em>) – 2d array of sample(s)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The raw output of the model in numpy array form.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">np.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.server.server.PredictionApiView.methods">
+<code class="descname">methods</code><em class="property"> = {'GET', 'POST'}</em><a class="headerlink" href="#gordo_components.server.server.PredictionApiView.methods" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.server.server.PredictionApiView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#PredictionApiView.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.PredictionApiView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get predictions</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.server.server.adapt_proxy_deployment">
+<code class="descclassname">gordo_components.server.server.</code><code class="descname">adapt_proxy_deployment</code><span class="sig-paren">(</span><em>wsgi_app: Callable</em><span class="sig-paren">)</span> &#x2192; Callable<a class="reference internal" href="../_modules/gordo_components/server/server.html#adapt_proxy_deployment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.adapt_proxy_deployment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator specific to fixing behind-proxy-issues when on Kubernetes and
+using Envoy proxy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wsgi_app</strong> (<em>typing.Callable</em>) – The underlying WSGI application of a flask app, for example</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Special note about deploying behind Ambassador, or prefixed proxy paths in general:</p>
+<p>When deployed on kubernetes/ambassador there is a prefix in-front of the
+server. ie:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">gordo</span><span class="o">/</span><span class="n">v0</span><span class="o">/</span><span class="n">some</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">some</span><span class="o">-</span><span class="n">target</span>
+</pre></div>
+</div>
+<p>The server itself only knows about routes to the right of such a prefix:
+such as <code class="docutils literal notranslate"><span class="pre">/metadata</span></code> or <code class="docutils literal notranslate"><span class="pre">/predictions</span></code> when in reality, the full path is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">gordo</span><span class="o">/</span><span class="n">v0</span><span class="o">/</span><span class="n">some</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">some</span><span class="o">-</span><span class="n">target</span><span class="o">/</span><span class="n">metadata</span>
+</pre></div>
+</div>
+<p>This is solved by getting the current application’s assigned prefix,
+where <code class="docutils literal notranslate"><span class="pre">HTTP_X_ENVOY_ORIGINAL_PATH</span></code> is the <em>full</em> path, including the prefix.
+and <code class="docutils literal notranslate"><span class="pre">PATH_INFO</span></code> is the actual relative path the server knows about.</p>
+<p>This function wraps the WSGI app itself to map the current full path
+to the assigned route function.</p>
+<p>ie. <code class="docutils literal notranslate"><span class="pre">/metadata</span></code> -&gt; metadata route function, by default, but updates
+<code class="docutils literal notranslate"><span class="pre">/gordo/v0/some-project-name/some-target/metadata</span></code> -&gt; metadata route function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Callable</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">adapt_proxy_deployment</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.server.server.build_app">
+<code class="descclassname">gordo_components.server.server.</code><code class="descname">build_app</code><span class="sig-paren">(</span><em>data_provider: Optional[gordo_components.data_provider.base.GordoBaseDataProvider] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#build_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.build_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build app and any associated routes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.server.server.load_model_and_metadata">
+<code class="descclassname">gordo_components.server.server.</code><code class="descname">load_model_and_metadata</code><span class="sig-paren">(</span><em>model_dir_env_var: str</em><span class="sig-paren">)</span> &#x2192; Tuple[sklearn.base.BaseEstimator, dict]<a class="reference internal" href="../_modules/gordo_components/server/server.html#load_model_and_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.load_model_and_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a model and metadata from the path found in <code class="docutils literal notranslate"><span class="pre">model_dir_env_var</span></code>
+environment variable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>model_dir_env_var</strong> (<em>str</em>) – The name of the environment variable which stores the location of the model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Tuple where the 0th element is the model, and the 1st element is the metadata
+associated with the model</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">BaseEstimator, dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.server.server.run_server">
+<code class="descclassname">gordo_components.server.server.</code><code class="descname">run_server</code><span class="sig-paren">(</span><em>host: str = '0.0.0.0'</em>, <em>port: int = 5555</em>, <em>debug: bool = False</em>, <em>data_provider: Optional[gordo_components.data_provider.base.GordoBaseDataProvider] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/server/server.html#run_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.server.server.run_server" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cli.html" class="btn btn-neutral float-right" title="CLI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="watchman.html" class="btn btn-neutral float-left" title="Watchman" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

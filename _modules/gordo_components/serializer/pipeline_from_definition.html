@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.serializer.pipeline_from_definition &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.serializer.pipeline_from_definition</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.serializer.pipeline_from_definition</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pydoc</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">FeatureUnion</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">FunctionTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">BaseEstimator</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="pipeline_from_definition"><a class="viewcode-back" href="../../../components/serializer.html#gordo_components.serializer.pipeline_from_definition.pipeline_from_definition">[docs]</a><span class="k">def</span> <span class="nf">pipeline_from_definition</span><span class="p">(</span>
+    <span class="n">pipe_definition</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FeatureUnion</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a Pipeline or FeatureUnion from a definition.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import yaml</span>
+<span class="sd">    &gt;&gt;&gt; from gordo_components import serializer</span>
+<span class="sd">    &gt;&gt;&gt; raw_config = &#39;&#39;&#39;</span>
+<span class="sd">    ... sklearn.pipeline.Pipeline:</span>
+<span class="sd">    ...         steps:</span>
+<span class="sd">    ...             - sklearn.decomposition.pca.PCA:</span>
+<span class="sd">    ...                 n_components: 3</span>
+<span class="sd">    ...             - sklearn.pipeline.FeatureUnion:</span>
+<span class="sd">    ...                 - sklearn.decomposition.pca.PCA:</span>
+<span class="sd">    ...                     n_components: 3</span>
+<span class="sd">    ...                 - sklearn.pipeline.Pipeline:</span>
+<span class="sd">    ...                     - sklearn.preprocessing.data.MinMaxScaler</span>
+<span class="sd">    ...                     - sklearn.decomposition.truncated_svd.TruncatedSVD:</span>
+<span class="sd">    ...                         n_components: 2</span>
+<span class="sd">    ...             - sklearn.ensemble.forest.RandomForestClassifier:</span>
+<span class="sd">    ...                 max_depth: 3</span>
+<span class="sd">    ... &#39;&#39;&#39;</span>
+<span class="sd">    &gt;&gt;&gt; config = yaml.load(raw_config)</span>
+<span class="sd">    &gt;&gt;&gt; scikit_learn_pipeline = serializer.pipeline_from_definition(config)</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    pipe_definition</span>
+<span class="sd">        List of steps for the Pipeline / FeatureUnion</span>
+<span class="sd">    constructor_class</span>
+<span class="sd">        What to place the list of transformers into,</span>
+<span class="sd">        either sklearn.pipeline.Pipeline/FeatureUnion</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sklearn.pipeline.Pipeline</span>
+<span class="sd">        pipeline</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Avoid some mutation</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">pipe_definition</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_build_step</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_build_branch</span><span class="p">(</span>
+    <span class="n">definition</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span>
+    <span class="n">constructor_class</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">Pipeline</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds a branch of the tree and optionall constructs the class with the given</span>
+<span class="sd">    leafs of the branch, if constructor_class is not none. Otherwise just the</span>
+<span class="sd">    built leafs are returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="n">f</span><span class="s2">&quot;step_</span><span class="si">{i}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_build_step</span><span class="p">(</span><span class="n">step</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">definition</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">steps</span> <span class="k">if</span> <span class="n">constructor_class</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">constructor_class</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_build_step</span><span class="p">(</span>
+    <span class="n">step</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FeatureUnion</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build an isolated step within a transformer list, given a dict config</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        step: dict/str - A dict, with a single key and associated dict</span>
+<span class="sd">                         where the associated dict are parameters for the</span>
+<span class="sd">                         given step.</span>
+
+<span class="sd">                         Example: {&#39;sklearn.preprocessing.PCA&#39;:</span>
+<span class="sd">                                        {&#39;n_components&#39;: 4}</span>
+<span class="sd">                                  }</span>
+<span class="sd">                            Gives:  PCA(n_components=4)</span>
+
+<span class="sd">                        Alternatively, &#39;step&#39; can be a single string, in</span>
+<span class="sd">                        which case the step will be initiated w/ default</span>
+<span class="sd">                        params.</span>
+
+<span class="sd">                        Example: &#39;sklearn.preprocessing.PCA&#39;</span>
+<span class="sd">                            Gives: PCA()</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Scikit-Learn Transformer or BaseEstimator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Building step: </span><span class="si">{step}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Here, &#39;step&#39; _should_ be a dict with a single key</span>
+    <span class="c1"># and an associated dict containing parameters for the desired</span>
+    <span class="c1"># sklearn step. ie. {&#39;sklearn.preprocessing.PCA&#39;: {&#39;n_components&#39;: 2}}</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Step should have a single key, &quot;</span> <span class="n">f</span><span class="s2">&quot;found multiple: {step.keys()}&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">import_str</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">import_str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+
+        <span class="n">StepClass</span> <span class="o">=</span> <span class="n">pydoc</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span>
+            <span class="n">import_str</span>
+        <span class="p">)</span>  <span class="c1"># type: Union[FeatureUnion, Pipeline, BaseEstimator]</span>
+
+        <span class="k">if</span> <span class="n">StepClass</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Could not locate path: &quot;</span><span class="si">{import_str}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># FeatureUnion or another Pipeline transformer</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">StepClass</span> <span class="o">==</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="p">[</span><span class="n">FeatureUnion</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">]):</span>
+
+            <span class="c1"># Need to ensure the parameters to be supplied are valid FeatureUnion</span>
+            <span class="c1"># &amp; Pipeline both take a list of transformers, but with different</span>
+            <span class="c1"># kwarg, here we pull out the list to keep _build_branch generic</span>
+            <span class="k">if</span> <span class="s2">&quot;transformer_list&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+                <span class="n">params</span><span class="p">[</span><span class="s2">&quot;transformer_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_build_branch</span><span class="p">(</span>
+                    <span class="n">params</span><span class="p">[</span><span class="s2">&quot;transformer_list&quot;</span><span class="p">],</span> <span class="kc">None</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="s2">&quot;steps&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+                <span class="n">params</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_build_branch</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="c1"># If params is an iterable, is has to be the first argument</span>
+            <span class="c1"># to the StepClass (FeatureUnion / Pipeline); a list of transformers</span>
+            <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="n">steps</span> <span class="o">=</span> <span class="n">_build_branch</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">StepClass</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s2">&quot;Got </span><span class="si">{StepClass}</span><span class="s2"> but the supplied parameters&quot;</span>
+                    <span class="n">f</span><span class="s2">&quot;seem invalid: </span><span class="si">{params}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># FunctionTransformer needs to have its `func` param loaded from</span>
+        <span class="c1"># gordo_components</span>
+        <span class="k">elif</span> <span class="n">StepClass</span> <span class="o">==</span> <span class="n">FunctionTransformer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">func_arg</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;inverse_func&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func_arg</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">func</span> <span class="o">=</span> <span class="n">pydoc</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">func_arg</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="n">f</span><span class="s2">&quot;Was unable to locate function: </span><span class="si">{params[func_arg]}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                    <span class="n">params</span><span class="p">[</span><span class="n">func_arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">StepClass</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="c1"># If step is just a string, can initialize it without any params</span>
+    <span class="c1"># ie. &quot;sklearn.preprocessing.PCA&quot;</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">Step</span> <span class="o">=</span> <span class="n">pydoc</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>  <span class="c1"># type: Union[FeatureUnion, Pipeline, BaseEstimator]</span>
+        <span class="k">return</span> <span class="n">Step</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;Expected step to be either a string or a dict,&quot;</span> <span class="n">f</span><span class="s2">&quot;found: {type(step)}&quot;</span>
+        <span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

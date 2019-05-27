@@ -1,0 +1,703 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.server.server &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.server.server</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.server.server</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">timeit</span>
+<span class="kn">import</span> <span class="nn">dateutil.parser</span>  <span class="c1"># type: ignore</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">send_file</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">current_app</span>
+<span class="kn">from</span> <span class="nn">flask_restplus</span> <span class="k">import</span> <span class="n">Resource</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">Api</span> <span class="k">as</span> <span class="n">BaseApi</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">BaseEstimator</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components</span> <span class="k">import</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">serializer</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.datasets</span> <span class="k">import</span> <span class="n">TimeSeriesDataset</span>
+<span class="kn">import</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">as</span> <span class="nn">sensor_tag</span>
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.base</span> <span class="k">import</span> <span class="n">GordoBaseDataProvider</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Server config&quot;&quot;&quot;</span>
+
+    <span class="n">MODEL_LOCATION_ENV_VAR</span> <span class="o">=</span> <span class="s2">&quot;MODEL_LOCATION&quot;</span></div>
+
+
+<div class="viewcode-block" id="Api"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.Api">[docs]</a><span class="k">class</span> <span class="nc">Api</span><span class="p">(</span><span class="n">BaseApi</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">specs_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">url_for</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">(</span><span class="s2">&quot;specs&quot;</span><span class="p">),</span> <span class="n">_external</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Gordo API Docs&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Documentation for the Gordo ML Server&quot;</span><span class="p">,</span>
+    <span class="n">default_label</span><span class="o">=</span><span class="s2">&quot;Gordo Endpoints&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># POST type declarations</span>
+<span class="n">API_MODEL_INPUT_POST</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+    <span class="s2">&quot;Prediction - Multiple Samples&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Float</span><span class="p">))}</span>
+<span class="p">)</span>
+<span class="n">API_MODEL_OUTPUT_POST</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+    <span class="s2">&quot;Prediction - Output from POST&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Float</span><span class="p">))}</span>
+<span class="p">)</span>
+
+
+<span class="c1"># GET type declarations</span>
+<span class="n">API_MODEL_INPUT_GET</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+    <span class="s2">&quot;Prediction - Time range prediction&quot;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTime</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">_tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">Float</span>
+<span class="p">}</span>  <span class="c1"># tags of single prediction record {&#39;tag-name&#39;: tag-value}</span>
+<span class="n">_single_prediction_record</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span>
+    <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span><span class="n">_tags</span><span class="p">),</span>
+    <span class="s2">&quot;total_abnormality&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">API_MODEL_OUTPUT_GET</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+    <span class="s2">&quot;Prediction - Output from GET&quot;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span><span class="n">_single_prediction_record</span><span class="p">))},</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="PredictionApiView"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.PredictionApiView">[docs]</a><span class="k">class</span> <span class="nc">PredictionApiView</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Serve model predictions via GET and POST methods</span>
+
+<span class="sd">    If ``GET``</span>
+<span class="sd">        Will take a ``start`` and ``end`` ISO format datetime string</span>
+<span class="sd">        and give back predictions in the following example::</span>
+
+<span class="sd">            {&#39;output&#39;: [</span>
+<span class="sd">                {&#39;end&#39;: &#39;2016-01-01 00:20:00+00:00&#39;,</span>
+<span class="sd">                 &#39;start&#39;: &#39;2016-01-01 00:10:00+00:00&#39;,</span>
+<span class="sd">                 &#39;tags&#39;: {&#39;tag-0&#39;: 0.6031807382481357,</span>
+<span class="sd">                          &#39;tag-1&#39;: 0.6850933943812884,</span>
+<span class="sd">                          &#39;tag-2&#39;: 0.37281826556659486,</span>
+<span class="sd">                          &#39;tag-3&#39;: 0.6688453143800668,</span>
+<span class="sd">                          &#39;tag-4&#39;: 0.3860472585679212,</span>
+<span class="sd">                          &#39;tag-5&#39;: 0.6704775418728366,</span>
+<span class="sd">                          &#39;tag-6&#39;: 0.36539023141775234,</span>
+<span class="sd">                          &#39;tag-7&#39;: 0.929348645859519,</span>
+<span class="sd">                          &#39;tag-8&#39;: 0.555020406599076,</span>
+<span class="sd">                          &#39;tag-9&#39;: 0.3908480506569232},</span>
+<span class="sd">                 &#39;total_anomaly&#39;: 1.8644325873977061}</span>
+<span class="sd">             ],</span>
+<span class="sd">             &#39;status-code&#39;: 200,</span>
+<span class="sd">             &#39;time-seconds&#39;: &#39;2.5015&#39;}</span>
+<span class="sd">    if ``POST``</span>
+<span class="sd">        Will take the raw data in ``X`` and expected to be of the correct shape.</span>
+<span class="sd">        This is much lower level, and reflects that raw input for the model.</span>
+
+<span class="sd">        Returned example format::</span>
+
+<span class="sd">            {&#39;output&#39;: [</span>
+<span class="sd">                [0.9620815728153441,</span>
+<span class="sd">                 0.48481952794697486,</span>
+<span class="sd">                 0.10449727234407678,</span>
+<span class="sd">                 0.5820399931840917,],</span>
+<span class="sd">                [0.7328459309239063,</span>
+<span class="sd">                 0.7933340297343985,</span>
+<span class="sd">                 0.4012604048104457,</span>
+<span class="sd">                 0.9799145817366233,],</span>
+<span class="sd">             &#39;status-code&#39;: 200,</span>
+<span class="sd">             &#39;time-seconds&#39;: &#39;0.0568&#39;}</span>
+
+<span class="sd">        where ``output`` represents the actual output of the model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_iso_datetime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+        <span class="n">parsed_date</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">isoparse</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="n">parsed_date</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Provide timezone to timestamp </span><span class="si">{datetime_str}</span><span class="s2">.&quot;</span>
+                <span class="n">f</span><span class="s2">&quot; Example: for UTC timezone use {datetime_str + &#39;Z&#39;} or {datetime_str + &#39;+00:00&#39;} &quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsed_date</span>
+
+<div class="viewcode-block" id="PredictionApiView.get_predictions"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.PredictionApiView.get_predictions">[docs]</a>    <span class="k">def</span> <span class="nf">get_predictions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the raw output from the current model given X.</span>
+<span class="sd">        Will try to `predict` and then `transform`, raising an error</span>
+<span class="sd">        if both fail.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">            2d array of sample(s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The raw output of the model in numpy array form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="c1"># Model may only be a transformer</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Failed to predict or transform; error: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span></div>
+
+<div class="viewcode-block" id="PredictionApiView.post"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.PredictionApiView.post">[docs]</a>    <span class="nd">@api</span><span class="o">.</span><span class="n">response</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span> <span class="n">API_MODEL_OUTPUT_POST</span><span class="p">)</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">API_MODEL_INPUT_POST</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;Nested list of samples to predict, or single list considered as one sample&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get predictions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># type: typing.Dict[str, typing.Any]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status-code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s1">&#39;Cannot predict without &quot;X&quot;&#39;</span><span class="p">},</span> <span class="mi">400</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s2">&quot;O&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Either provided non numerical elements or records with different shapes.&quot;</span>
+                    <span class="s2">&quot;  ie. [[0, 1, 2], [0, 1]]&quot;</span>
+                <span class="p">},</span>
+                <span class="mi">400</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Reshape X to sample 1 record if a single record was given</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">X</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_predictions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Failed to predict or transform; error: </span><span class="si">{err}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;ValueError: {str(err)}&quot;</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status-code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">400</span>
+        <span class="c1"># Model may only be a transformer, probably an AttributeError, but catch all to avoid logging other</span>
+        <span class="c1"># exceptions twice if it happens.</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Failed to predict or transform; error: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Something unexpected happened; check your input data&quot;</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status-code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">400</span>
+
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;time-seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{timeit.default_timer() - start_time:.4f}&quot;</span>
+        <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status-code&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PredictionApiView.get"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.PredictionApiView.get">[docs]</a>    <span class="nd">@api</span><span class="o">.</span><span class="n">response</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span> <span class="n">API_MODEL_OUTPUT_POST</span><span class="p">)</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="s2">&quot;An ISO formatted datetime with timezone info string indicating prediction range start&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="s2">&quot;An ISO formatted datetime with timezone info string indicating prediction range end&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># type: typing.Dict[str, typing.Any]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status-code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;must provide iso8601 formatted dates with &quot;</span>
+                    <span class="s2">&quot;timezone-information for parameters &#39;start&#39; and &#39;end&#39;&quot;</span>
+                <span class="p">},</span>
+                <span class="mi">400</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_iso_datetime</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">])</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_iso_datetime</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Failed to parse start and/or end date to ISO: start: &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{params[&#39;start&#39;]}</span><span class="s2"> - end: </span><span class="si">{params[&#39;end&#39;]}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Could not parse start/end date(s) into ISO datetime. &quot;</span>
+                    <span class="s2">&quot;must provide iso8601 formatted dates for both.&quot;</span>
+                <span class="p">},</span>
+                <span class="mi">400</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Make request time span of one day</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Need to request a time span less than 24 hours.&quot;</span><span class="p">},</span> <span class="mi">400</span>
+
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">to_offset</span><span class="p">(</span>
+            <span class="n">current_app</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">][</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">TimeSeriesDataset</span><span class="p">(</span>
+            <span class="n">data_provider</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">data_provider</span><span class="p">,</span>
+            <span class="n">from_ts</span><span class="o">=</span><span class="n">start</span> <span class="o">-</span> <span class="n">freq</span><span class="o">.</span><span class="n">delta</span><span class="p">,</span>
+            <span class="n">to_ts</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">current_app</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">][</span><span class="s2">&quot;resolution&quot;</span><span class="p">],</span>
+            <span class="n">tag_list</span><span class="o">=</span><span class="n">sensor_tag</span><span class="o">.</span><span class="n">normalize_sensor_tags</span><span class="p">(</span>
+                <span class="n">current_app</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">][</span><span class="s2">&quot;tag_list&quot;</span><span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_y</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+        <span class="c1"># Want resampled buckets equal or greater than start, but less than end</span>
+        <span class="c1"># b/c if end == 00:00:00 and req = 10 mins, a resampled bucket starting</span>
+        <span class="c1"># at 00:00:00 would imply it has data until 00:10:00; which is passed</span>
+        <span class="c1"># the requested end datetime</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[(</span><span class="n">X</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;</span> <span class="n">start</span> <span class="o">-</span> <span class="n">freq</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">freq</span><span class="o">.</span><span class="n">delta</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">)]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">xhat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_predictions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="c1"># Model may only be a transformer, probably an AttributeError, but catch all to avoid logging other</span>
+        <span class="c1"># exceptions twice if it happens.</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Failed to predict or transform; error: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Something unexpected happened; check your input data&quot;</span><span class="p">},</span>
+                <span class="mi">400</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># In GET requests we need to pair the resulting predictions with their</span>
+        <span class="c1"># specific timestamp and additionally match the predictions to the corresponding tags.</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># This tags list is just for display/informative purposes, skipping the asset</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">current_app</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">][</span><span class="s2">&quot;tag_list&quot;</span><span class="p">]]</span>
+
+        <span class="k">for</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">time_stamp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xhat</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">xhat</span><span class="p">)</span> <span class="p">:]):</span>
+
+            <span class="c1"># Auto encoders return double their input.</span>
+            <span class="c1"># First half is input to model, second half is output of model</span>
+            <span class="n">tag_inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)])</span>
+            <span class="n">tag_outputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="p">:])</span>
+            <span class="n">tag_errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tag_inputs</span> <span class="o">-</span> <span class="n">tag_outputs</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{time_stamp}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;{time_stamp + freq}&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">error</span> <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">tag_errors</span><span class="p">)},</span>
+                    <span class="s2">&quot;total_anomaly&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">tag_inputs</span> <span class="o">-</span> <span class="n">tag_outputs</span><span class="p">),</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;time-seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{timeit.default_timer() - start_time:.4f}&quot;</span>
+        <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status-code&quot;</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="MetaDataView"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.MetaDataView">[docs]</a><span class="k">class</span> <span class="nc">MetaDataView</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Serve model / server metadata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MetaDataView.get"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.MetaDataView.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get metadata about this endpoint, also serves as /healthcheck endpoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model_location_env_var</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;MODEL_LOCATION_ENV_VAR&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;gordo-server-version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">current_app</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+            <span class="s2">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">model_location_env_var</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_location_env_var</span><span class="p">)},</span>
+        <span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="DownloadModel"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.DownloadModel">[docs]</a><span class="k">class</span> <span class="nc">DownloadModel</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download the trained model</span>
+
+<span class="sd">    suitable for reloading via ``gordo_components.serializer.loads()``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DownloadModel.get"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.DownloadModel.get">[docs]</a>    <span class="nd">@api</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download model, loadable via gordo_components.serializer.loads&quot;</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Responds with a serialized copy of the current model being served.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bytes</span>
+<span class="sd">            Results from ``gordo_components.serializer.dumps()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">serialized_model</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">current_app</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">buff</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">serialized_model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">send_file</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">attachment_filename</span><span class="o">=</span><span class="s2">&quot;model.tar.gz&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="adapt_proxy_deployment"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.adapt_proxy_deployment">[docs]</a><span class="k">def</span> <span class="nf">adapt_proxy_deployment</span><span class="p">(</span><span class="n">wsgi_app</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator specific to fixing behind-proxy-issues when on Kubernetes and</span>
+<span class="sd">    using Envoy proxy.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wsgi_app: typing.Callable</span>
+<span class="sd">        The underlying WSGI application of a flask app, for example</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Special note about deploying behind Ambassador, or prefixed proxy paths in general:</span>
+
+<span class="sd">    When deployed on kubernetes/ambassador there is a prefix in-front of the</span>
+<span class="sd">    server. ie::</span>
+
+<span class="sd">        /gordo/v0/some-project-name/some-target</span>
+
+<span class="sd">    The server itself only knows about routes to the right of such a prefix:</span>
+<span class="sd">    such as ``/metadata`` or ``/predictions`` when in reality, the full path is::</span>
+
+<span class="sd">        /gordo/v0/some-project-name/some-target/metadata</span>
+
+<span class="sd">    This is solved by getting the current application&#39;s assigned prefix,</span>
+<span class="sd">    where ``HTTP_X_ENVOY_ORIGINAL_PATH`` is the *full* path, including the prefix.</span>
+<span class="sd">    and ``PATH_INFO`` is the actual relative path the server knows about.</span>
+
+<span class="sd">    This function wraps the WSGI app itself to map the current full path</span>
+<span class="sd">    to the assigned route function.</span>
+
+<span class="sd">    ie. ``/metadata`` -&gt; metadata route function, by default, but updates</span>
+<span class="sd">    ``/gordo/v0/some-project-name/some-target/metadata`` -&gt; metadata route function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Callable</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; app = Flask(__name__)</span>
+<span class="sd">    &gt;&gt;&gt; app.wsgi_app = adapt_proxy_deployment(app.wsgi_app)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">wsgi_app</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+
+        <span class="c1"># Script name can be &quot;/gordo/v0/some-project-name/some-target/metadata&quot;</span>
+        <span class="n">script_name</span> <span class="o">=</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_X_ENVOY_ORIGINAL_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">script_name</span><span class="p">:</span>
+
+            <span class="c1"># PATH_INFO could be either &quot;/&quot; or some local route such as &quot;/metadata&quot;</span>
+            <span class="n">path_info</span> <span class="o">=</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH_INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">path_info</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+
+                <span class="c1"># PATH_INFO must be something like &quot;/metadata&quot; or other local path</span>
+                <span class="c1"># To figure out the prefix/script_name we remove it from the</span>
+                <span class="c1"># full HTTP_X_ENVOY_ORIGINAL_PATH, so that something such as</span>
+                <span class="c1"># /gordo/v0/some-project-name/some-target/metadata, becomes</span>
+                <span class="c1"># /gordo/v0/some-project-name/some-target/</span>
+                <span class="n">script_name</span> <span class="o">=</span> <span class="n">script_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">path_info</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SCRIPT_NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_name</span>
+
+            <span class="c1"># Now we can just ensure the PATH_INFO reflects the locally known path</span>
+            <span class="c1"># such as /metadata and not /gordo/v0/some-project-name/some-target/metadata</span>
+            <span class="k">if</span> <span class="n">path_info</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">script_name</span><span class="p">):</span>
+                <span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH_INFO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_info</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">script_name</span><span class="p">)</span> <span class="p">:]</span>
+
+        <span class="n">scheme</span> <span class="o">=</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_X_FORWARDED_PROTO&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">scheme</span><span class="p">:</span>
+            <span class="n">environ</span><span class="p">[</span><span class="s2">&quot;wsgi.url_scheme&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scheme</span>
+        <span class="k">return</span> <span class="n">wsgi_app</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<div class="viewcode-block" id="load_model_and_metadata"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.load_model_and_metadata">[docs]</a><span class="k">def</span> <span class="nf">load_model_and_metadata</span><span class="p">(</span>
+    <span class="n">model_dir_env_var</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a model and metadata from the path found in ``model_dir_env_var``</span>
+<span class="sd">    environment variable</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_dir_env_var: str</span>
+<span class="sd">        The name of the environment variable which stores the location of the model</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    BaseEstimator, dict</span>
+<span class="sd">        Tuple where the 0th element is the model, and the 1st element is the metadata</span>
+<span class="sd">        associated with the model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Determining model location...&quot;</span><span class="p">)</span>
+    <span class="n">model_location</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">model_dir_env_var</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">model_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Environment variable &quot;</span><span class="si">{model_dir_env_var}</span><span class="s1">&quot; not set!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">model_location</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span>
+            <span class="n">f</span><span class="s1">&#39;The supplied directory: &quot;</span><span class="si">{model_location}</span><span class="s1">&quot; does not exist!&#39;</span>
+        <span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_location</span><span class="p">)</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="n">model_location</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">metadata</span></div>
+
+
+<div class="viewcode-block" id="build_app"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.build_app">[docs]</a><span class="k">def</span> <span class="nf">build_app</span><span class="p">(</span><span class="n">data_provider</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">GordoBaseDataProvider</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build app and any associated routes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">Config</span><span class="p">())</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="n">PredictionApiView</span><span class="p">,</span> <span class="s2">&quot;/prediction&quot;</span><span class="p">)</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="n">MetaDataView</span><span class="p">,</span> <span class="s2">&quot;/metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;/healthcheck&quot;</span><span class="p">)</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="n">DownloadModel</span><span class="p">,</span> <span class="s2">&quot;/download-model&quot;</span><span class="p">)</span>
+
+    <span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">adapt_proxy_deployment</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">url_map</span><span class="o">.</span><span class="n">strict_slashes</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># /path and /path/ are ok.</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">before_request</span>
+    <span class="k">def</span> <span class="nf">_reg_data_provider</span><span class="p">():</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">data_provider</span> <span class="o">=</span> <span class="n">data_provider</span>
+
+    <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">load_model_and_metadata</span><span class="p">(</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;MODEL_LOCATION_ENV_VAR&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<div class="viewcode-block" id="run_server"><a class="viewcode-back" href="../../../components/server.html#gordo_components.server.server.run_server">[docs]</a><span class="k">def</span> <span class="nf">run_server</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5555</span><span class="p">,</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">data_provider</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">GordoBaseDataProvider</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">build_app</span><span class="p">(</span><span class="n">data_provider</span><span class="o">=</span><span class="n">data_provider</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">run_server</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

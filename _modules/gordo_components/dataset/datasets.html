@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.dataset.datasets &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.dataset.datasets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.dataset.datasets</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.providers</span> <span class="k">import</span> <span class="n">RandomDataProvider</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.base</span> <span class="k">import</span> <span class="n">GordoBaseDataset</span>
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.base</span> <span class="k">import</span> <span class="n">GordoBaseDataProvider</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.filter_rows</span> <span class="k">import</span> <span class="n">pandas_filter_rows</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">import</span> <span class="n">SensorTag</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">import</span> <span class="n">normalize_sensor_tags</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TimeSeriesDataset"><a class="viewcode-back" href="../../../components/dataset.html#gordo_components.dataset.datasets.TimeSeriesDataset">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesDataset</span><span class="p">(</span><span class="n">GordoBaseDataset</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_provider</span><span class="p">:</span> <span class="n">GordoBaseDataProvider</span><span class="p">,</span>
+        <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">tag_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">SensorTag</span><span class="p">]],</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;10T&quot;</span><span class="p">,</span>
+        <span class="n">row_filter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">_kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a TimeSeriesDataset backed by a provided dataprovider.</span>
+
+<span class="sd">        A TimeSeriesDataset is a dataset backed by timeseries, but resampled,</span>
+<span class="sd">        aligned, and (optionally) filtered.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_provider: GordoBaseDataProvider</span>
+<span class="sd">            A dataprovider which can provide dataframes for tags from from_ts to to_ts</span>
+<span class="sd">        from_ts: datetime</span>
+<span class="sd">            Earliest possible point in the dataset (inclusive)</span>
+<span class="sd">        to_ts: datetime</span>
+<span class="sd">            Earliest possible point in the dataset (exclusive)</span>
+<span class="sd">        tag_list: List[Union[str, Dict, sensor_tag.SensorTag]]</span>
+<span class="sd">            List of tags to include in the dataset. The elements can be strings,</span>
+<span class="sd">            dictionaries or SensorTag namedtuples.</span>
+<span class="sd">        resolution: str</span>
+<span class="sd">            The bucket size for grouping all incoming time data (e.g. &quot;10T&quot;).</span>
+<span class="sd">        row_filter: str</span>
+<span class="sd">            Filter on the rows. Only rows satisfying the filter will be in the dataset.</span>
+<span class="sd">            See :func:`gordo_components.dataset.filter_rows.pandas_filter_rows` for</span>
+<span class="sd">            further documentation of the filter format.</span>
+<span class="sd">        _kwargs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_ts</span> <span class="o">=</span> <span class="n">from_ts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_ts</span> <span class="o">=</span> <span class="n">to_ts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag_list</span> <span class="o">=</span> <span class="n">normalize_sensor_tags</span><span class="p">(</span><span class="n">tag_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_provider</span> <span class="o">=</span> <span class="n">data_provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span> <span class="o">=</span> <span class="n">row_filter</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_ts</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ts</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Timestamps (</span><span class="si">{self.from_ts}</span><span class="s2">, </span><span class="si">{self.to_ts}</span><span class="s2">) need to include timezone &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;information&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="TimeSeriesDataset.get_data"><a class="viewcode-back" href="../../../components/dataset.html#gordo_components.dataset.datasets.TimeSeriesDataset.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">dataframes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_provider</span><span class="o">.</span><span class="n">load_series</span><span class="p">(</span>
+            <span class="n">from_ts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">to_ts</span><span class="p">,</span> <span class="n">tag_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_list</span>
+        <span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">join_timeseries</span><span class="p">(</span><span class="n">dataframes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_ts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">pandas_filter_rows</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="TimeSeriesDataset.get_metadata"><a class="viewcode-back" href="../../../components/dataset.html#gordo_components.dataset.datasets.TimeSeriesDataset.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;tag_list&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_list</span><span class="p">,</span>
+            <span class="s2">&quot;train_start_date&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_ts</span><span class="p">,</span>
+            <span class="s2">&quot;train_end_date&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ts</span><span class="p">,</span>
+            <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
+            <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">metadata</span></div></div>
+
+
+<div class="viewcode-block" id="RandomDataset"><a class="viewcode-back" href="../../../components/dataset.html#gordo_components.dataset.datasets.RandomDataset">[docs]</a><span class="k">class</span> <span class="nc">RandomDataset</span><span class="p">(</span><span class="n">TimeSeriesDataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a TimeSeriesDataset backed by</span>
+<span class="sd">    gordo_components.data_provider.providers.RandomDataProvider</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;data_provider&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># Dont care what you ask for, you get random!</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">data_provider</span><span class="o">=</span><span class="n">RandomDataProvider</span><span class="p">(),</span>
+            <span class="n">from_ts</span><span class="o">=</span><span class="n">from_ts</span><span class="p">,</span>
+            <span class="n">to_ts</span><span class="o">=</span><span class="n">to_ts</span><span class="p">,</span>
+            <span class="n">tag_list</span><span class="o">=</span><span class="n">tag_list</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

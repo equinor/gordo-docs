@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.serializer.serializer &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.serializer.serializer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.serializer.serializer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">bz2</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">simplejson</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pydoc</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">IO</span>  <span class="c1"># pragma: no flakes</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">FeatureUnion</span><span class="p">,</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span>  <span class="c1"># noqa</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">GordoBase</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">N_STEP_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*n_step=([0-9]+)&quot;</span><span class="p">)</span>
+<span class="n">CLASS_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*class=(.*$)&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="dumps"><a class="viewcode-back" href="../../../components/serializer.html#gordo_components.serializer.serializer.dumps">[docs]</a><span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Pipeline</span><span class="p">,</span> <span class="n">GordoBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dump a model into a bytes representation suitable for loading from</span>
+<span class="sd">    ``gordo_components.serializer.loads``</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model: Union[Pipeline, GordoBase]</span>
+<span class="sd">        A gordo model/pipeline</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bytes</span>
+<span class="sd">        Serialized model which supports loading via ``serializer.loads()``</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from gordo_components.model.models import KerasAutoEncoder</span>
+<span class="sd">    &gt;&gt;&gt; from gordo_components import serializer</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; model = KerasAutoEncoder(&#39;feedforward_symmetric&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; serialized = serializer.dumps(model)</span>
+<span class="sd">    &gt;&gt;&gt; assert isinstance(serialized, bytes)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; model_clone = serializer.loads(serialized)</span>
+<span class="sd">    &gt;&gt;&gt; assert isinstance(model_clone, KerasAutoEncoder)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+        <span class="n">dump</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+        <span class="n">tarbuff</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">tarbuff</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w:gz&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+            <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="s2">&quot;serialized_gordo_model&quot;</span><span class="p">)</span>
+        <span class="n">tarbuff</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tarbuff</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="loads"><a class="viewcode-back" href="../../../components/serializer.html#gordo_components.serializer.serializer.loads">[docs]</a><span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="n">bytes_object</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GordoBase</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a GordoBase model from bytes dumped from ``gordo_components.serializer.dumps``</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bytes_object: bytes</span>
+<span class="sd">        Bytes to be loaded, should be the result of `serializer.dumps(model)`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Union[GordoBase, Pipeline, BaseEstimator]</span>
+<span class="sd">        Custom gordo model, scikit learn pipeline or other scikit learn like object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+
+        <span class="n">tarbuff</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">bytes_object</span><span class="p">)</span>
+        <span class="n">tarbuff</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">tarbuff</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r:gz&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+            <span class="n">archive</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="s2">&quot;serialized_gordo_model&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="load_metadata"><a class="viewcode-back" href="../../../components/serializer.html#gordo_components.serializer.serializer.load_metadata">[docs]</a><span class="k">def</span> <span class="nf">load_metadata</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the given metadata.json which was saved during the ``serializer.dump``</span>
+<span class="sd">    will return the loaded metadata as a dict, or empty dict if no file was found</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_dir: str</span>
+<span class="sd">        Directory of the saved model, As with serializer.load(source_dir) this</span>
+<span class="sd">        source_dir can be the top level, or the first dir into the serialized model.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Since this function can take the top level dir, or a dir directly</span>
+    <span class="c1"># into the first step of the pipeline, we need to check both for metadata</span>
+    <span class="k">for</span> <span class="n">possible_path</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;metadata.json&quot;</span><span class="p">),</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata.json&quot;</span><span class="p">),</span>
+    <span class="p">]:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">possible_path</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">possible_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="n">f</span><span class="s1">&#39;Metadata file in source dir: &quot;</span><span class="si">{source_dir}</span><span class="s1">&quot; not found&#39;</span>
+        <span class="n">f</span><span class="s2">&quot; in or up one directory.&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../components/serializer.html#gordo_components.serializer.serializer.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load an object from a directory, saved by</span>
+<span class="sd">    ``gordo_components.serializer.pipeline_serializer.dump``</span>
+
+<span class="sd">    This take a directory, which is either top-level, meaning it contains</span>
+<span class="sd">    a sub directory in the naming scheme: &quot;n_step=&lt;int&gt;-class=&lt;path.to.Class&gt;&quot;</span>
+<span class="sd">    or the aforementioned naming scheme directory directly. Will return that</span>
+<span class="sd">    unsterilized object.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_dir: str</span>
+<span class="sd">        Location of the top level dir the pipeline was saved</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Union[GordoBase, Pipeline, BaseEstimator]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This source dir should have a single pipeline entry directory.</span>
+    <span class="c1"># may have been passed a top level dir, containing such an entry:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source_dir</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;n_step&quot;</span><span class="p">):</span>
+        <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;n_step=&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Found multiple object entries to load from, &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;should pass a directory to pipeline directly or &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;a directory containing a single object entry.&quot;</span>
+                <span class="n">f</span><span class="s2">&quot;Possible objects found: </span><span class="si">{dirs}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">source_dir</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Load step always returns a tuple of (str, object), index to object</span>
+    <span class="k">return</span> <span class="n">_load_step</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_parse_dir_name</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses the required params from a directory name for loading</span>
+<span class="sd">    Expected name format ``n_step=&lt;int&gt;-class=&lt;path.to.class.Model&gt;``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">N_STEP_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="n">f</span><span class="s1">&#39;Source dir not valid, expected &quot;n_step=&quot; in &#39;</span>
+            <span class="n">f</span><span class="s2">&quot;directory but instead got: </span><span class="si">{source_dir}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># type: int</span>
+
+    <span class="n">match</span> <span class="o">=</span> <span class="n">CLASS_REGEX</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="n">f</span><span class="s1">&#39;Source dir not valid, expected &quot;class=&quot; in directory &#39;</span>
+            <span class="n">f</span><span class="s2">&quot;but instead got: </span><span class="si">{source_dir}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">class_path</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># type: str</span>
+    <span class="k">return</span> <span class="n">n_step</span><span class="p">,</span> <span class="n">class_path</span>
+
+
+<span class="k">def</span> <span class="nf">_load_step</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a single step from a source directory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        source_dir: str - directory in format &quot;n_step=&lt;int&gt;-class=&lt;path.to.class.Model&gt;&quot;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Tuple[str, object]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_step</span><span class="p">,</span> <span class="n">class_path</span> <span class="o">=</span> <span class="n">_parse_dir_name</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+    <span class="n">StepClass</span> <span class="o">=</span> <span class="n">pydoc</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span>
+        <span class="n">class_path</span>
+    <span class="p">)</span>  <span class="c1"># type: Union[FeatureUnion, Pipeline, BaseEstimator]</span>
+    <span class="k">if</span> <span class="n">StepClass</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="n">f</span><span class="s1">&#39;Specified a class path of &quot;</span><span class="si">{class_path}</span><span class="s1">&quot; but it does &#39;</span>
+            <span class="n">f</span><span class="s2">&quot;not exist. Will attempt to unpickle it from file in &quot;</span>
+            <span class="n">f</span><span class="s2">&quot;source directory: </span><span class="si">{source_dir}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">step_name</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;step={str(n_step).zfill(3)}&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># type: Dict[str, Any]</span>
+
+    <span class="c1"># If this is a FeatureUnion, we also have a `params.json` for it</span>
+    <span class="k">if</span> <span class="n">StepClass</span> <span class="o">==</span> <span class="n">FeatureUnion</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;params.json&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="c1"># Pipelines and FeatureUnions have sub steps which need to be loaded</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">StepClass</span> <span class="o">==</span> <span class="n">Obj</span> <span class="k">for</span> <span class="n">Obj</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Pipeline</span><span class="p">,</span> <span class="n">FeatureUnion</span><span class="p">)):</span>
+
+        <span class="c1"># Load the sub_dirs to load into the Pipeline/FeatureUnion in order</span>
+        <span class="n">sub_dirs_to_load</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">sub_dir</span>
+                <span class="k">for</span> <span class="n">sub_dir</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">))</span>
+            <span class="p">],</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">_parse_dir_name</span><span class="p">(</span><span class="n">d</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_load_step</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">))</span> <span class="k">for</span> <span class="n">sub_dir</span> <span class="ow">in</span> <span class="n">sub_dirs_to_load</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">StepClass</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="c1"># May model implementing load_from_dir method, from GordoBase</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">StepClass</span><span class="p">,</span> <span class="s2">&quot;load_from_dir&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">StepClass</span><span class="o">.</span><span class="n">load_from_dir</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+
+    <span class="c1"># Otherwise we have a normal Scikit-Learn transformer</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Find the name of this file in the directory, should only be one</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;*.pkl.gz&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Expected a single file in what is expected to be &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;a single object directory, found {len(file)} &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;in directory: </span><span class="si">{source_dir}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>  <span class="c1"># type: IO[bytes]</span>
+            <span class="k">return</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../../components/serializer.html#gordo_components.serializer.serializer.dump">[docs]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Serialize an object into a directory</span>
+
+<span class="sd">    The object must either be picklable or implement BOTH a ``GordoBase.save_to_dir`` AND</span>
+<span class="sd">    ``GordoBase.load_from_dir`` methods. This object can hold multiple objects, specifically</span>
+<span class="sd">    it can be a sklearn.pipeline.[FeatureUnion, Pipeline] object, in such a case</span>
+<span class="sd">    it&#39;s sub transformers (steps/transformer_list) will be serialized recursively.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj</span>
+<span class="sd">        The object to dump. Must be picklable or implement</span>
+<span class="sd">        a ``save_to_dir`` AND ``load_from_dir`` method.</span>
+<span class="sd">    dest_dir: Union[os.PathLike, str]</span>
+<span class="sd">        The directory to which to save the model metadata: dict - any additional</span>
+<span class="sd">        metadata to be saved alongside this model if it exists, will be returned</span>
+<span class="sd">        from the corresponding &quot;load&quot; function</span>
+<span class="sd">    metadata: Optional dict of metadata which will be serialized to a file together</span>
+<span class="sd">        with the model, and loaded again by :func:`load_metadata`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; from sklearn.pipeline import Pipeline</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.decomposition import PCA</span>
+<span class="sd">    &gt;&gt;&gt; from gordo_components.model.models import KerasAutoEncoder</span>
+<span class="sd">    &gt;&gt;&gt; from gordo_components import serializer</span>
+<span class="sd">    &gt;&gt;&gt; from tempfile import TemporaryDirectory</span>
+<span class="sd">    &gt;&gt;&gt; pipe = Pipeline([</span>
+<span class="sd">    ...     # PCA is picklable</span>
+<span class="sd">    ...     (&#39;pca&#39;, PCA(3)),</span>
+<span class="sd">    ...     # KerasAutoEncoder implements both `save_to_dir` and `load_from_dir`</span>
+<span class="sd">    ...     (&#39;model&#39;, KerasAutoEncoder(kind=&#39;feedforward_hourglass&#39;))])</span>
+<span class="sd">    &gt;&gt;&gt; with TemporaryDirectory() as tmp:</span>
+<span class="sd">    ...     serializer.dump(obj=pipe, dest_dir=tmp)</span>
+<span class="sd">    ...     pipe_clone = serializer.load(source_dir=tmp)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_dump_step</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;obj&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">),</span> <span class="n">n_step</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dest_dir</span><span class="o">=</span><span class="n">dest_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="s2">&quot;metadata.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">simplejson</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_dump_step</span><span class="p">(</span>
+    <span class="n">step</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">GordoBase</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">]],</span>
+    <span class="n">dest_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">n_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Accepts any Scikit-Learn transformer and dumps it into a directory</span>
+<span class="sd">    recoverable by gordo_components.serializer.pipeline_serializer.load</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step</span>
+<span class="sd">        The step to dump</span>
+<span class="sd">    dest_dir</span>
+<span class="sd">        The path to the top level directory to start the potentially recursive saving of steps.</span>
+<span class="sd">    n_step</span>
+<span class="sd">        The order of this step in the pipeline, default to 0</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Creates a new directory at the `dest_dir` in the format:</span>
+<span class="sd">        `n_step=000-class=&lt;full.path.to.Object` with any required files for recovery stored there.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">step_name</span><span class="p">,</span> <span class="n">step_transformer</span> <span class="o">=</span> <span class="n">step</span>
+    <span class="n">step_import_str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span><span class="s2">&quot;</span><span class="si">{step_transformer.__module__}</span><span class="s2">.</span><span class="si">{step_transformer.__class__.__name__}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">sub_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">dest_dir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;n_step={str(n_step).zfill(3)}-class=</span><span class="si">{step_import_str}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sub_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="n">Obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">Obj</span> <span class="ow">in</span> <span class="p">[</span><span class="n">FeatureUnion</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">]):</span>
+        <span class="n">steps_attr</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;transformer_list&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="n">FeatureUnion</span><span class="p">)</span>
+            <span class="k">else</span> <span class="s2">&quot;steps&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="n">steps_attr</span><span class="p">)):</span>
+            <span class="n">_dump_step</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">n_step</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">dest_dir</span><span class="o">=</span><span class="n">sub_dir</span><span class="p">)</span>
+
+        <span class="c1"># If this is a feature Union, we want to save `n_jobs` &amp; `transformer_weights`</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="n">FeatureUnion</span><span class="p">):</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;n_jobs&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="s2">&quot;n_jobs&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;transformer_weights&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="s2">&quot;transformer_weights&quot;</span><span class="p">),</span>
+            <span class="p">}</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sub_dir</span><span class="p">,</span> <span class="s2">&quot;params.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">simplejson</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="s2">&quot;save_to_dir&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="s2">&quot;load_from_dir&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s1">&#39;The object in this step implements a &quot;save_to_dir&quot; but &#39;</span>
+                    <span class="n">f</span><span class="s1">&#39;not &quot;load_from_dir&quot; it will be un-recoverable!&#39;</span>
+                <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Saving model to sub_dir: </span><span class="si">{sub_dir}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">step_transformer</span><span class="o">.</span><span class="n">save_to_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sub_dir</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sub_dir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{step_name}</span><span class="s2">.pkl.gz&quot;</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>  <span class="c1"># type: IO[bytes]</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">step_transformer</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

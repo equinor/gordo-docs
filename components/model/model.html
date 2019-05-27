@@ -1,0 +1,1000 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Models &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Model factories" href="model-factories.html" />
+    <link rel="prev" title="Architecture" href="../../general/architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#base-model">Base Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-gordo-models">Custom Gordo models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model-factories.html">Model factories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transformer-funcs.html">Transformer Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/model/model.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="models">
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<p>Models are a collection of <a class="reference external" href="https://scikit-learn.org/stable/">Scikit-Learn</a>
+like models, built specifically to fulfill a need. One example of which is
+the <code class="docutils literal notranslate"><span class="pre">KerasAutoEncoder</span></code>.</p>
+<p>Other scikit-learn compliant models can be used within the config files without
+any additional configuration.</p>
+<div class="section" id="base-model">
+<h2>Base Model<a class="headerlink" href="#base-model" title="Permalink to this headline">¶</a></h2>
+<p>The base model is designed to be inherited from any other models which need
+to be implemented within Gordo due to special model requirements. ie. PyTorch,
+Keras, etc.</p>
+<span class="target" id="module-gordo_components.model.base"></span><dl class="class">
+<dt id="gordo_components.model.base.GordoBase">
+<em class="property">class </em><code class="descclassname">gordo_components.model.base.</code><code class="descname">GordoBase</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/base.html#GordoBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.base.GordoBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Initialize the model</p>
+<dl class="method">
+<dt id="gordo_components.model.base.GordoBase.get_metadata">
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/base.html#GordoBase.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.base.GordoBase.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get model specific metadata, if any</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.base.GordoBase.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/base.html#GordoBase.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.base.GordoBase.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict containing all parameters used to initialized object</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="gordo_components.model.base.GordoBase.load_from_dir">
+<em class="property">classmethod </em><code class="descname">load_from_dir</code><span class="sig-paren">(</span><em>directory: str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/base.html#GordoBase.load_from_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.base.GordoBase.load_from_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load this model from a directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.base.GordoBase.save_to_dir">
+<code class="descname">save_to_dir</code><span class="sig-paren">(</span><em>directory: str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/base.html#GordoBase.save_to_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.base.GordoBase.save_to_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save this model to a directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.base.GordoBase.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.frame.DataFrame, None] = None, sample_weight: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/base.html#GordoBase.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.base.GordoBase.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the model; must implement the correct default scorer based on model type</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="custom-gordo-models">
+<h2>Custom Gordo models<a class="headerlink" href="#custom-gordo-models" title="Permalink to this headline">¶</a></h2>
+<p>This group of models are already implemented and ready to be used within
+config files, by simply specifying their full path. For example:
+<code class="docutils literal notranslate"><span class="pre">gordo_components.model.models.KerasAutoEncoder</span></code></p>
+<span class="target" id="module-gordo_components.model.models"></span><dl class="class">
+<dt id="gordo_components.model.models.KerasAutoEncoder">
+<em class="property">class </em><code class="descclassname">gordo_components.model.models.</code><code class="descname">KerasAutoEncoder</code><span class="sig-paren">(</span><em>kind: Union[str, Callable[[int, Dict[str, Any]], keras.engine.training.Model]], **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasAutoEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasAutoEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.model.models.KerasBaseEstimator" title="gordo_components.model.models.KerasBaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.model.models.KerasBaseEstimator</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>Subclass of the KerasBaseEstimator to allow fitting to just X without requiring y.</p>
+<p>Initialized a Scikit-Learn API compatitble Keras model with a pre-registered function or a builder function
+directly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kind</strong> (<em>Union</em><em>[</em><em>callable</em><em>, </em><em>str</em><em>]</em>) – The structure of the model to build. As designated by any registered builder
+functions, registered with gordo_compontents.model.register.register_model_builder
+Alternatively, one may pass a builder function directly to this argument. Such a
+function should accept <cite>n_features</cite> as it’s first argument, and pass any additional
+parameters to <cite>**kwargs</cite></li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any additional args which are passed to the factory
+building function and/or any additional args to be passed
+to Keras’ fit() method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.model.models.KerasAutoEncoder.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>y: Optional[numpy.ndarray] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; gordo_components.model.models.KerasAutoEncoder<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasAutoEncoder.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasAutoEncoder.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model to X given y.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – numpy array or pandas dataframe</li>
+<li><strong>y</strong> (<em>np.ndarray</em>) – numpy array or pandas dataframe</li>
+<li><strong>sample_weight</strong> (<em>np.ndarray</em>) – array like - weight to assign to samples</li>
+<li><strong>kwargs</strong> – Any additional kwargs to supply to keras fit method.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">‘KerasAutoEncoder’</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasAutoEncoder.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.frame.DataFrame, None] = None, sample_weight: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasAutoEncoder.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasAutoEncoder.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the explained variance score between auto encoder’s input vs output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Input data to the model</li>
+<li><strong>y</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Target</li>
+<li><strong>sample_weight</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – sample weights</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>score</strong> – Returns the explained variance score</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasAutoEncoder.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasAutoEncoder.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasAutoEncoder.transform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – Input data</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – kwargs which are passed to Kera’s <code class="docutils literal notranslate"><span class="pre">predict</span></code> method</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">np.ndarray</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">results</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The data returns from this method is double the feature length of its input.
+The first half of each sample output is the _input_ of the model, and the
+output is concatenated (axis=1) with the input. ie. If the input has 4 features,
+the output will have 8, where the first 4 are the values which went into the model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.model.models.KerasBaseEstimator">
+<em class="property">class </em><code class="descclassname">gordo_components.model.models.</code><code class="descname">KerasBaseEstimator</code><span class="sig-paren">(</span><em>kind: Union[str, Callable[[int, Dict[str, Any]], keras.engine.training.Model]], **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasBaseEstimator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">keras.wrappers.scikit_learn.BaseWrapper</span></code>, <a class="reference internal" href="#gordo_components.model.base.GordoBase" title="gordo_components.model.base.GordoBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.model.base.GordoBase</span></code></a></p>
+<p>Initialized a Scikit-Learn API compatitble Keras model with a pre-registered function or a builder function
+directly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kind</strong> (<em>Union</em><em>[</em><em>callable</em><em>, </em><em>str</em><em>]</em>) – The structure of the model to build. As designated by any registered builder
+functions, registered with gordo_compontents.model.register.register_model_builder
+Alternatively, one may pass a builder function directly to this argument. Such a
+function should accept <cite>n_features</cite> as it’s first argument, and pass any additional
+parameters to <cite>**kwargs</cite></li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any additional args which are passed to the factory
+building function and/or any additional args to be passed
+to Keras’ fit() method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.model.models.KerasBaseEstimator.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X: numpy.ndarray, y: Optional[numpy.ndarray], **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasBaseEstimator.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model to X given y.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – numpy array or pandas dataframe</li>
+<li><strong>y</strong> (<em>np.ndarray</em>) – numpy array or pandas dataframe</li>
+<li><strong>sample_weight</strong> (<em>np.ndarray</em>) – array like - weight to assign to samples</li>
+<li><strong>kwargs</strong> – Any additional kwargs to supply to keras fit method.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">‘KerasAutoEncoder’</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasBaseEstimator.get_metadata">
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasBaseEstimator.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get metadata for the KerasBaseEstimator.
+Includes a dictionary with key “history”. The key’s value is a a dictionary
+with a key “params” pointing another dictionary with various parameters.
+The metrics are defined in the params dictionary under “metrics”.
+For each of the metrics there is a key who’s value is a list of values for this
+metric per epoch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Metadata dictionary, including a history object if present</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasBaseEstimator.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasBaseEstimator.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the parameters for this estimator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>params</strong> – ignored (exists for API compatibility).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Parameters used in this estimator</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Dict[str, Any]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="gordo_components.model.models.KerasBaseEstimator.load_from_dir">
+<em class="property">classmethod </em><code class="descname">load_from_dir</code><span class="sig-paren">(</span><em>directory: str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasBaseEstimator.load_from_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator.load_from_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an instance of this class from a directory, such that it was dumped to
+using <a class="reference internal" href="#gordo_components.model.models.KerasBaseEstimator.save_to_dir" title="gordo_components.model.models.KerasBaseEstimator.save_to_dir"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.model.models.KerasBaseEstimator.save_to_dir()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>directory</strong> (<em>str</em>) – The directory to save this model to, must have write access</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasBaseEstimator.save_to_dir">
+<code class="descname">save_to_dir</code><span class="sig-paren">(</span><em>directory: str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasBaseEstimator.save_to_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator.save_to_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save this model to a directory</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.model.models.KerasBaseEstimator.sk_params">
+<code class="descname">sk_params</code><a class="headerlink" href="#gordo_components.model.models.KerasBaseEstimator.sk_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters used for scikit learn kwargs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.model.models.KerasLSTMAutoEncoder">
+<em class="property">class </em><code class="descclassname">gordo_components.model.models.</code><code class="descname">KerasLSTMAutoEncoder</code><span class="sig-paren">(</span><em>kind: Union[Callable, str], lookback_window: int = 1, batch_size: int = 32, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMAutoEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMAutoEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.model.models.KerasLSTMBaseEstimator" title="gordo_components.model.models.KerasLSTMBaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.model.models.KerasLSTMBaseEstimator</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kind</strong> (<em>Union</em><em>[</em><em>Callable</em><em>, </em><em>str</em><em>]</em>) – The structure of the model to build. As designated by any registered builder
+functions, registered with gordo_components.model.register.register_model_builder
+Alternatively, one may pass a builder function directly to this argument. Such a
+function should accept <cite>n_features</cite> as it’s first argument, and pass any additional
+parameters to <cite>**kwargs</cite>.</li>
+<li><strong>lookback_window</strong> (<em>int</em>) – Number of timestamps (lags) used to train the model.</li>
+<li><strong>batch_size</strong> (<em>int</em>) – Number of training examples used in one epoch.</li>
+<li><strong>epochs</strong> (<em>int</em>) – Number of epochs to train the model. An epoch is an iteration over the entire
+data provided.</li>
+<li><strong>verbose</strong> (<em>int</em>) – Verbosity mode. Possible values are 0, 1, or 2 where 0 = silent, 1 = progress bar,
+2 = one line per epoch.</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any arguments which are passed to the factory building function and/or any
+additional args to be passed to the intermediate fit method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMAutoEncoder.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>y: Optional[numpy.ndarray] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; gordo_components.model.models.KerasLSTMAutoEncoder<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMAutoEncoder.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMAutoEncoder.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This fits a many-to-one LSTM architecture using Keras fit_generator method. For
+further details on the input/output samples fed to this method, refer to the generate_window
+method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – 2D numpy array of dimension n_samples x n_features. Input data to train.</li>
+<li><strong>y</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – This is an LSTM Autoencoder which does not need a y. Thus it will be ignored.</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any additional args to be passed to Keras fit_generator method.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">KerasLSTMAutoEncoder</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">class</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMAutoEncoder.generate_window">
+<code class="descname">generate_window</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>output_y: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMAutoEncoder.generate_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMAutoEncoder.generate_window" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – 2D numpy array of dimension n_samples x n_features. Data used to train model or predict/transform values
+from fitted model.</li>
+<li><strong>output_y</strong> (<em>bool</em>) – If true, sample_in and sample_out for Keras LSTM fit_generator will be generated,
+If false, sample_in for Keras LSTM predict_generator will be generated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>if output_y is True, it returns a tuple of length 2 with first element being one input sample and second element</em></li>
+<li><em>one corresponding output sample.</em></li>
+<li><em>The input sample is a 3D np array. Each iterate generates a window of data points of</em></li>
+<li><em>size 1 x lookback_window x n_features to use within fit/transform methods.</em></li>
+<li><strong>Note</strong> (<em>If all input samples are generated (when for example using Keras LSTM fit_generator) their form is given</em>)</li>
+<li><strong>by</strong> (<em>np.array([X[0 : lookback_window], X[1 : lookback_window+1],…])</em>)</li>
+<li><em>The output sample is the last data point on the input sample, reshaped to a 2D np array</em></li>
+<li><em>of size 1 x n_features.</em></li>
+<li><strong>Note</strong> (<em>If all output samples generated (when for example using Keras LSTM fit_generator) their form is given by</em>)</li>
+<li><em>np.array([X[lookback_window-1], X[lookback_window],…])</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>if output_y is False then only the input sample is returned.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasLSTMAutoEncoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.factories</span> <span class="k">import</span> <span class="n">lstm_autoencoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span>
+<span class="go">array([[1. , 0.1],</span>
+<span class="go">       [0.5, 0.7],</span>
+<span class="go">       [2. , 1. ],</span>
+<span class="go">       [1. , 1.5]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lookback_window</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">=</span><span class="n">KerasLSTMAutoEncoder</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">lstm_autoencoder</span><span class="o">.</span><span class="n">lstm_hourglass</span><span class="p">,</span><span class="n">lookback_window</span><span class="o">=</span><span class="n">lookback_window</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_window</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample1</span><span class="p">,</span> <span class="n">output_sample1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample2</span><span class="p">,</span> <span class="n">output_sample2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample3</span><span class="p">,</span> <span class="n">output_sample3</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample1</span>
+<span class="go">array([[[1. , 0.1],</span>
+<span class="go">        [0.5, 0.7]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_sample1</span>
+<span class="go">array([[0.5, 0.7]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample2</span>
+<span class="go">array([[[0.5, 0.7],</span>
+<span class="go">        [2. , 1. ]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_sample2</span>
+<span class="go">array([[2., 1.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample3</span>
+<span class="go">array([[[2. , 1. ],</span>
+<span class="go">        [1. , 1.5]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_sample3</span>
+<span class="go">array([[1. , 1.5]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMAutoEncoder.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.frame.DataFrame, None] = None, sample_weight: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMAutoEncoder.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMAutoEncoder.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the explained variance score between auto encoder’s input vs output
+(note: for LSTM X is offset by lookback_window - 1).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Input data to the model.</li>
+<li><strong>y</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Target</li>
+<li><strong>sample_weight</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – Sample weights</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>score</strong> – Returns the explained variance score.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMAutoEncoder.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMAutoEncoder.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMAutoEncoder.transform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>np.ndarray</em>) – 2D numpy array of dimension n_samples x n_features where n_samples must be &gt;= lookback_window.
+Data to autoencode.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>results</strong> – 2D numpy array of dimension (n_samples - (lookback_window - 1)) x 2*n_features.  The first half
+of the array (results[:,:n_features]) corresponds to X offset by the lookback_window
+(i.e., X[lookback_window - 1:,:]) whereas the second half corresponds to the autoencoded values
+of X[lookback_window - 1:,:].</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">np.ndarray</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">keras</span> <span class="k">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.factories.lstm_autoencoder</span> <span class="k">import</span> <span class="n">lstm_model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasLSTMAutoEncoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Setting seeds to get reproducible results</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session_conf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ConfigProto</span><span class="p">(</span><span class="n">intra_op_parallelism_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">inter_op_parallelism_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">get_default_graph</span><span class="p">(),</span> <span class="n">config</span><span class="o">=</span><span class="n">session_conf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">set_session</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rn</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Define train/test data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Initiate model, fit and transform</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lstm_ae</span> <span class="o">=</span> <span class="n">KerasLSTMAutoEncoder</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;lstm_model&quot;</span><span class="p">,</span> <span class="n">lookback_window</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_fit</span> <span class="o">=</span> <span class="n">lstm_ae</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_transform</span> <span class="o">=</span> <span class="n">lstm_ae</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_example</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.00503557</span><span class="p">,</span> <span class="mf">0.00501121</span><span class="p">],[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span><span class="mf">0.00503096</span><span class="p">,</span> <span class="mf">0.00500809</span><span class="p">],</span>
+<span class="gp">... </span>                                       <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span><span class="mf">0.00503031</span><span class="p">,</span> <span class="mf">0.00500737</span><span class="p">]])</span> <span class="c1">#Note: output can be non</span>
+<span class="gp">... </span>                                                                          <span class="c1">#deterministic so an example</span>
+<span class="gp">... </span>                                                                          <span class="c1">#output is provided</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_transform</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(3, 4)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.model.models.KerasLSTMBaseEstimator">
+<em class="property">class </em><code class="descclassname">gordo_components.model.models.</code><code class="descname">KerasLSTMBaseEstimator</code><span class="sig-paren">(</span><em>kind: Union[Callable, str], lookback_window: int = 1, batch_size: int = 32, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMBaseEstimator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMBaseEstimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.model.models.KerasBaseEstimator" title="gordo_components.model.models.KerasBaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.model.models.KerasBaseEstimator</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>Abstract Base Class to allow to train a many-one LSTM autoencoder and an LSTM
+1 step forecast</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kind</strong> (<em>Union</em><em>[</em><em>Callable</em><em>, </em><em>str</em><em>]</em>) – The structure of the model to build. As designated by any registered builder
+functions, registered with gordo_components.model.register.register_model_builder
+Alternatively, one may pass a builder function directly to this argument. Such a
+function should accept <cite>n_features</cite> as it’s first argument, and pass any additional
+parameters to <cite>**kwargs</cite>.</li>
+<li><strong>lookback_window</strong> (<em>int</em>) – Number of timestamps (lags) used to train the model.</li>
+<li><strong>batch_size</strong> (<em>int</em>) – Number of training examples used in one epoch.</li>
+<li><strong>epochs</strong> (<em>int</em>) – Number of epochs to train the model. An epoch is an iteration over the entire
+data provided.</li>
+<li><strong>verbose</strong> (<em>int</em>) – Verbosity mode. Possible values are 0, 1, or 2 where 0 = silent, 1 = progress bar,
+2 = one line per epoch.</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any arguments which are passed to the factory building function and/or any
+additional args to be passed to the intermediate fit method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMBaseEstimator.calc_steps_per_epoch">
+<code class="descname">calc_steps_per_epoch</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMBaseEstimator.calc_steps_per_epoch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMBaseEstimator.calc_steps_per_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method calculates the number of steps to yield from the generator prior to declaring one epoch
+finished and starting the next epoch.</p>
+<dl class="docutils">
+<dt>References</dt>
+<dd><a class="reference external" href="https://keras.io/models/model/#fit_generator">https://keras.io/models/model/#fit_generator</a></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMBaseEstimator.generate_window">
+<code class="descname">generate_window</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>output_y: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMBaseEstimator.generate_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMBaseEstimator.generate_window" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.model.models.KerasLSTMForecast">
+<em class="property">class </em><code class="descclassname">gordo_components.model.models.</code><code class="descname">KerasLSTMForecast</code><span class="sig-paren">(</span><em>kind: Union[Callable, str], lookback_window: int = 1, batch_size: int = 32, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMForecast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMForecast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.model.models.KerasLSTMBaseEstimator" title="gordo_components.model.models.KerasLSTMBaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.model.models.KerasLSTMBaseEstimator</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kind</strong> (<em>Union</em><em>[</em><em>Callable</em><em>, </em><em>str</em><em>]</em>) – The structure of the model to build. As designated by any registered builder
+functions, registered with gordo_components.model.register.register_model_builder
+Alternatively, one may pass a builder function directly to this argument. Such a
+function should accept <cite>n_features</cite> as it’s first argument, and pass any additional
+parameters to <cite>**kwargs</cite>.</li>
+<li><strong>lookback_window</strong> (<em>int</em>) – Number of timestamps (lags) used to train the model.</li>
+<li><strong>batch_size</strong> (<em>int</em>) – Number of training examples used in one epoch.</li>
+<li><strong>epochs</strong> (<em>int</em>) – Number of epochs to train the model. An epoch is an iteration over the entire
+data provided.</li>
+<li><strong>verbose</strong> (<em>int</em>) – Verbosity mode. Possible values are 0, 1, or 2 where 0 = silent, 1 = progress bar,
+2 = one line per epoch.</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any arguments which are passed to the factory building function and/or any
+additional args to be passed to the intermediate fit method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMForecast.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>y: Optional[numpy.ndarray] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; gordo_components.model.models.KerasLSTMForecast<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMForecast.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMForecast.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This fits a one step forecast LSTM architecture using Keras fit_generator method.  For further details
+on the input/output samples fed to this method, refer to the generate_window method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – 2D numpy array of dimension n_samples x n_features. Input data to train.</li>
+<li><strong>y</strong> (<em>np.ndarray</em>) – This is a forecast based LSTM model which does not need a y. Thus it will be ignored.</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Any additional args to be passed to Keras fit_generator method.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">KerasLSTMForecast</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">class</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMForecast.generate_window">
+<code class="descname">generate_window</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>output_y: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMForecast.generate_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMForecast.generate_window" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>np.ndarray</em>) – 2D numpy array of dimension n_samples x n_features. Data used to train model or predict/transform values
+from fitted model.</li>
+<li><strong>output_y</strong> (<em>bool</em>) – If true, sample_in and sample_out for Keras LSTM fit_generator will be generated,
+If false, sample_in for Keras LSTM predict_generator will be generated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If output_y is True, it returns a tuple of length 2 with the first element being the input sample and</em></li>
+<li><em>the second element being the output sample.</em></li>
+<li><em>The input sample is a 3D np array. Each iterate generates a window of data points of</em></li>
+<li><em>size 1 x lookback_window x n_features to use within fit/transform methods.</em></li>
+<li><strong>Note</strong> (<em>If all input samples are generated (when for example using Keras LSTM fit_generator) their form is given</em>)</li>
+<li><strong>by</strong> (<em>np.array([X[0 : lookback_window], X[1 : lookback_window+1],…])</em>)</li>
+<li><strong>The output sample is X[lookback+i,</strong> (<em>], where i is the index of the current window (i.e. the (lookback_window+i)th</em>)</li>
+<li><em>sample from X)</em></li>
+<li><strong>Note</strong> (<em>If all output samples generated (when for example using Keras LSTM fit_generator) their form is given by</em>)</li>
+<li><em>np.array([X[lookback_window], X[lookback_window+1],…])</em></li>
+<li><em>If output_y is False then only the input sample is returned.</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasLSTMForecast</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.factories</span> <span class="k">import</span> <span class="n">lstm_autoencoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span>
+<span class="go">array([[1. , 0.1],</span>
+<span class="go">       [0.5, 0.7],</span>
+<span class="go">       [2. , 1. ],</span>
+<span class="go">       [1. , 1.5]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lookback_window</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">=</span><span class="n">KerasLSTMForecast</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">lstm_autoencoder</span><span class="o">.</span><span class="n">lstm_hourglass</span><span class="p">,</span><span class="n">lookback_window</span><span class="o">=</span><span class="n">lookback_window</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_window</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample1</span><span class="p">,</span> <span class="n">output_sample1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample2</span><span class="p">,</span> <span class="n">output_sample2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample1</span>
+<span class="go">array([[[1. , 0.1],</span>
+<span class="go">        [0.5, 0.7]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_sample1</span>
+<span class="go">array([[2., 1.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample2</span>
+<span class="go">array([[[0.5, 0.7],</span>
+<span class="go">        [2. , 1. ]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_sample2</span>
+<span class="go">array([[1. , 1.5]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMForecast.get_metadata">
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMForecast.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMForecast.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add number of forecast steps to metadata</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>metadata</strong> – Metadata dictionary, including forecast steps.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMForecast.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.frame.DataFrame, None] = None, sample_weight: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMForecast.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMForecast.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the explained variance score between 1 step forecasted input and true input at next time step
+(note: for LSTM X is offset by lookback_window).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Input data to the model.</li>
+<li><strong>y</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Target</li>
+<li><strong>sample_weight</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – Sample weights</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>score</strong> – Returns the explained variance score.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.model.models.KerasLSTMForecast.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../../_modules/gordo_components/model/models.html#KerasLSTMForecast.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.KerasLSTMForecast.transform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>np.ndarray</em>) – 2D numpy array of dimension n_samples x n_features where n_samples must be &gt; lookback_window.
+Data to predict/transform.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>results</strong> – 2D numpy array of dimension (n_samples - lookback_window) x 2*n_features.  The first half
+of the array (results[:,:n_features]) corresponds to X offset by lookback_window+1
+(i.e., X[lookback_window:,:]) whereas the second half corresponds to the predicted values
+of X[lookback_window:,:].</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">np.ndarray</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">keras</span> <span class="k">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.factories.lstm_autoencoder</span> <span class="k">import</span> <span class="n">lstm_model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasLSTMForecast</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Setting seeds to get reproducible results</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session_conf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ConfigProto</span><span class="p">(</span><span class="n">intra_op_parallelism_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">inter_op_parallelism_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">get_default_graph</span><span class="p">(),</span> <span class="n">config</span><span class="o">=</span><span class="n">session_conf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">set_session</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rn</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Define train/test data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Initiate model, fit and transform</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lstm_ae</span> <span class="o">=</span> <span class="n">KerasLSTMForecast</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;lstm_model&quot;</span><span class="p">,</span> <span class="n">lookback_window</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_fit</span> <span class="o">=</span> <span class="n">lstm_ae</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_transform</span> <span class="o">=</span> <span class="n">lstm_ae</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_example</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.1</span>       <span class="p">,</span> <span class="mf">1.</span>        <span class="p">,</span> <span class="mf">0.00467027</span><span class="p">,</span> <span class="mf">0.00561625</span><span class="p">],</span>
+<span class="gp">... </span>                           <span class="p">[</span><span class="mf">0.5</span>       <span class="p">,</span> <span class="mf">2.</span>        <span class="p">,</span> <span class="mf">0.00466603</span><span class="p">,</span> <span class="mf">0.00561359</span><span class="p">]])</span> <span class="c1">#Note: output can be non</span>
+<span class="gp">... </span>                                                                              <span class="c1">#deterministic so an example</span>
+<span class="gp">... </span>                                                                              <span class="c1">#output is provided</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_transform</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(2, 4)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.model.models.possible_tf_mgmt">
+<code class="descclassname">gordo_components.model.models.</code><code class="descname">possible_tf_mgmt</code><span class="sig-paren">(</span><em>keras_model</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gordo_components/model/models.html#possible_tf_mgmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.models.possible_tf_mgmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator - When serving a Keras model backed by tensorflow, the object is expected
+to have <code class="docutils literal notranslate"><span class="pre">_tf_graph</span></code> and <code class="docutils literal notranslate"><span class="pre">_tf_session</span></code> stored attrs. Which will be used as the
+default when calling the Keras model</p>
+<p class="rubric">Notes</p>
+<p>Should only be needed by those developing new Keras models wrapped to behave like
+Scikit-Learn Esitmators</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keras_model</strong> (<a class="reference internal" href="#gordo_components.model.models.KerasBaseEstimator" title="gordo_components.model.models.KerasBaseEstimator"><em>KerasBaseEstimator</em></a>) – An instance of a <cite>KerasBaseEstimator</cite> which can potentially have a tensorflow backend</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Model Extensions:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model-factories.html">Model factories</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model-factories.html#module-gordo_components.model.factories.feedforward_autoencoder">feedforward factories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model-factories.html#module-gordo_components.model.factories.lstm_autoencoder">lstm factories</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transformer-funcs.html">Transformer Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transformer-funcs.html#module-gordo_components.model.transformer_funcs.general">General</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="model-factories.html" class="btn btn-neutral float-right" title="Model factories" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../general/architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

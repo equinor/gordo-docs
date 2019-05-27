@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Watchman &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ML Server" href="server.html" />
+    <link rel="prev" title="Serializer" href="serializer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serializer.html">Serializer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Watchman</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Watchman</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Watchman</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/watchman.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="watchman">
+<h1>Watchman<a class="headerlink" href="#watchman" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>Watchman<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-gordo_components.watchman.server"></span><dl class="class">
+<dt id="gordo_components.watchman.server.EndpointStatus">
+<em class="property">class </em><code class="descclassname">gordo_components.watchman.server.</code><code class="descname">EndpointStatus</code><span class="sig-paren">(</span><em>endpoint</em>, <em>target</em>, <em>metadata</em>, <em>healthy</em>, <em>model_builder_status</em>, <em>model_server_status</em><span class="sig-paren">)</span><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Create new instance of EndpointStatus(endpoint, target, metadata, healthy, model_builder_status, model_server_status)</p>
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.EndpointStatus.endpoint">
+<code class="descname">endpoint</code><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus.endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.EndpointStatus.healthy">
+<code class="descname">healthy</code><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus.healthy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.EndpointStatus.metadata">
+<code class="descname">metadata</code><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.EndpointStatus.model_builder_status">
+<code class="descname">model_builder_status</code><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus.model_builder_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.EndpointStatus.model_server_status">
+<code class="descname">model_server_status</code><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus.model_server_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 5</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.EndpointStatus.target">
+<code class="descname">target</code><a class="headerlink" href="#gordo_components.watchman.server.EndpointStatus.target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.watchman.server.ModelBuilderStatus">
+<em class="property">class </em><code class="descclassname">gordo_components.watchman.server.</code><code class="descname">ModelBuilderStatus</code><span class="sig-paren">(</span><em>status</em>, <em>logs</em><span class="sig-paren">)</span><a class="headerlink" href="#gordo_components.watchman.server.ModelBuilderStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Create new instance of ModelBuilderStatus(status, logs)</p>
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.ModelBuilderStatus.logs">
+<code class="descname">logs</code><a class="headerlink" href="#gordo_components.watchman.server.ModelBuilderStatus.logs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.ModelBuilderStatus.status">
+<code class="descname">status</code><a class="headerlink" href="#gordo_components.watchman.server.ModelBuilderStatus.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.watchman.server.ModelServerStatus">
+<em class="property">class </em><code class="descclassname">gordo_components.watchman.server.</code><code class="descname">ModelServerStatus</code><span class="sig-paren">(</span><em>status</em>, <em>logs</em><span class="sig-paren">)</span><a class="headerlink" href="#gordo_components.watchman.server.ModelServerStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Create new instance of ModelServerStatus(status, logs)</p>
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.ModelServerStatus.logs">
+<code class="descname">logs</code><a class="headerlink" href="#gordo_components.watchman.server.ModelServerStatus.logs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.ModelServerStatus.status">
+<code class="descname">status</code><a class="headerlink" href="#gordo_components.watchman.server.ModelServerStatus.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.watchman.server.WatchmanApi">
+<em class="property">class </em><code class="descclassname">gordo_components.watchman.server.</code><code class="descname">WatchmanApi</code><a class="reference internal" href="../_modules/gordo_components/watchman/server.html#WatchmanApi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.watchman.server.WatchmanApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
+<p>API view to list expected endpoints in this project space and report if they
+are up or not.</p>
+<dl class="method">
+<dt id="gordo_components.watchman.server.WatchmanApi.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/watchman/server.html#WatchmanApi.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.watchman.server.WatchmanApi.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="gordo_components.watchman.server.WatchmanApi.methods">
+<code class="descname">methods</code><em class="property"> = {'GET'}</em><a class="headerlink" href="#gordo_components.watchman.server.WatchmanApi.methods" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.watchman.server.build_app">
+<code class="descclassname">gordo_components.watchman.server.</code><code class="descname">build_app</code><span class="sig-paren">(</span><em>project_name: str, project_version: str, target_names: Iterable[str], namespace: str, ambassador_namespace: Optional[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/watchman/server.html#build_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.watchman.server.build_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build app and any associated routes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.watchman.server.healthcheck">
+<code class="descclassname">gordo_components.watchman.server.</code><code class="descname">healthcheck</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/watchman/server.html#healthcheck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.watchman.server.healthcheck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return gordo version, route for Watchman server</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.watchman.server.run_server">
+<code class="descclassname">gordo_components.watchman.server.</code><code class="descname">run_server</code><span class="sig-paren">(</span><em>host: str, port: int, debug: bool, project_name: str, project_version: str, target_names: Iterable[str], namespace: str, ambassador_namespace: Optional[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/watchman/server.html#run_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.watchman.server.run_server" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="server.html" class="btn btn-neutral float-right" title="ML Server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="serializer.html" class="btn btn-neutral float-left" title="Serializer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

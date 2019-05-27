@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Serializer &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Watchman" href="watchman.html" />
+    <link rel="prev" title="Datasets" href="dataset.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Datasets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Serializer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Serializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.serializer.pipeline_from_definition">Pipeline from definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.serializer.pipeline_into_definition">Pipeline into definition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Serializer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/serializer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="serializer">
+<h1>Serializer<a class="headerlink" href="#serializer" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>Serializer<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-gordo_components.serializer.serializer"></span><dl class="function">
+<dt id="gordo_components.serializer.serializer.dump">
+<code class="descclassname">gordo_components.serializer.serializer.</code><code class="descname">dump</code><span class="sig-paren">(</span><em>obj: object, dest_dir: Union[os.PathLike, str], metadata: dict = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/serializer/serializer.html#dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.serializer.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize an object into a directory</p>
+<p>The object must either be picklable or implement BOTH a <code class="docutils literal notranslate"><span class="pre">GordoBase.save_to_dir</span></code> AND
+<code class="docutils literal notranslate"><span class="pre">GordoBase.load_from_dir</span></code> methods. This object can hold multiple objects, specifically
+it can be a sklearn.pipeline.[FeatureUnion, Pipeline] object, in such a case
+it’s sub transformers (steps/transformer_list) will be serialized recursively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> – The object to dump. Must be picklable or implement
+a <code class="docutils literal notranslate"><span class="pre">save_to_dir</span></code> AND <code class="docutils literal notranslate"><span class="pre">load_from_dir</span></code> method.</li>
+<li><strong>dest_dir</strong> (<em>Union</em><em>[</em><em>os.PathLike</em><em>, </em><em>str</em><em>]</em>) – The directory to which to save the model metadata: dict - any additional
+metadata to be saved alongside this model if it exists, will be returned
+from the corresponding “load” function</li>
+<li><strong>metadata</strong> (<em>Optional dict of metadata which will be serialized to a file together</em>) – with the model, and loaded again by <a class="reference internal" href="#gordo_components.serializer.serializer.load_metadata" title="gordo_components.serializer.serializer.load_metadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_metadata()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasAutoEncoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components</span> <span class="k">import</span> <span class="n">serializer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">TemporaryDirectory</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="c1"># PCA is picklable</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="c1"># KerasAutoEncoder implements both `save_to_dir` and `load_from_dir`</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">KerasAutoEncoder</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;feedforward_hourglass&#39;</span><span class="p">))])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">serializer</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">pipe</span><span class="p">,</span> <span class="n">dest_dir</span><span class="o">=</span><span class="n">tmp</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">pipe_clone</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">source_dir</span><span class="o">=</span><span class="n">tmp</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.serializer.serializer.dumps">
+<code class="descclassname">gordo_components.serializer.serializer.</code><code class="descname">dumps</code><span class="sig-paren">(</span><em>model: Union[sklearn.pipeline.Pipeline, gordo_components.model.base.GordoBase]</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="../_modules/gordo_components/serializer/serializer.html#dumps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.serializer.dumps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump a model into a bytes representation suitable for loading from
+<code class="docutils literal notranslate"><span class="pre">gordo_components.serializer.loads</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>model</strong> (<em>Union</em><em>[</em><em>Pipeline</em><em>, </em><a class="reference internal" href="model/model.html#gordo_components.model.base.GordoBase" title="gordo_components.model.base.GordoBase"><em>GordoBase</em></a><em>]</em>) – A gordo model/pipeline</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Serialized model which supports loading via <code class="docutils literal notranslate"><span class="pre">serializer.loads()</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasAutoEncoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components</span> <span class="k">import</span> <span class="n">serializer</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">KerasAutoEncoder</span><span class="p">(</span><span class="s1">&#39;feedforward_symmetric&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serialized</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">serialized</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_clone</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_clone</span><span class="p">,</span> <span class="n">KerasAutoEncoder</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.serializer.serializer.load">
+<code class="descclassname">gordo_components.serializer.serializer.</code><code class="descname">load</code><span class="sig-paren">(</span><em>source_dir: str</em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="../_modules/gordo_components/serializer/serializer.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.serializer.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an object from a directory, saved by
+<code class="docutils literal notranslate"><span class="pre">gordo_components.serializer.pipeline_serializer.dump</span></code></p>
+<p>This take a directory, which is either top-level, meaning it contains
+a sub directory in the naming scheme: “n_step=&lt;int&gt;-class=&lt;path.to.Class&gt;”
+or the aforementioned naming scheme directory directly. Will return that
+unsterilized object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_dir</strong> (<em>str</em>) – Location of the top level dir the pipeline was saved</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Union[<a class="reference internal" href="model/model.html#gordo_components.model.base.GordoBase" title="gordo_components.model.base.GordoBase">GordoBase</a>, Pipeline, BaseEstimator]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.serializer.serializer.load_metadata">
+<code class="descclassname">gordo_components.serializer.serializer.</code><code class="descname">load_metadata</code><span class="sig-paren">(</span><em>source_dir: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../_modules/gordo_components/serializer/serializer.html#load_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.serializer.load_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the given metadata.json which was saved during the <code class="docutils literal notranslate"><span class="pre">serializer.dump</span></code>
+will return the loaded metadata as a dict, or empty dict if no file was found</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_dir</strong> (<em>str</em>) – Directory of the saved model, As with serializer.load(source_dir) this
+source_dir can be the top level, or the first dir into the serialized model.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.serializer.serializer.loads">
+<code class="descclassname">gordo_components.serializer.serializer.</code><code class="descname">loads</code><span class="sig-paren">(</span><em>bytes_object: bytes</em><span class="sig-paren">)</span> &#x2192; gordo_components.model.base.GordoBase<a class="reference internal" href="../_modules/gordo_components/serializer/serializer.html#loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.serializer.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a GordoBase model from bytes dumped from <code class="docutils literal notranslate"><span class="pre">gordo_components.serializer.dumps</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bytes_object</strong> (<em>bytes</em>) – Bytes to be loaded, should be the result of <cite>serializer.dumps(model)</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Custom gordo model, scikit learn pipeline or other scikit learn like object.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Union[<a class="reference internal" href="model/model.html#gordo_components.model.base.GordoBase" title="gordo_components.model.base.GordoBase">GordoBase</a>, Pipeline, BaseEstimator]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.serializer.pipeline_from_definition">
+<span id="pipeline-from-definition"></span><h2>Pipeline from definition<a class="headerlink" href="#module-gordo_components.serializer.pipeline_from_definition" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gordo_components.serializer.pipeline_from_definition.pipeline_from_definition">
+<code class="descclassname">gordo_components.serializer.pipeline_from_definition.</code><code class="descname">pipeline_from_definition</code><span class="sig-paren">(</span><em>pipe_definition: Union[str, Dict[str, Dict[str, Any]]]</em><span class="sig-paren">)</span> &#x2192; Union[sklearn.pipeline.FeatureUnion, sklearn.pipeline.Pipeline]<a class="reference internal" href="../_modules/gordo_components/serializer/pipeline_from_definition.html#pipeline_from_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.pipeline_from_definition.pipeline_from_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a Pipeline or FeatureUnion from a definition.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">yaml</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components</span> <span class="k">import</span> <span class="n">serializer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">raw_config</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">sklearn.pipeline.Pipeline:</span>
+<span class="gp">... </span><span class="s1">        steps:</span>
+<span class="gp">... </span><span class="s1">            - sklearn.decomposition.pca.PCA:</span>
+<span class="gp">... </span><span class="s1">                n_components: 3</span>
+<span class="gp">... </span><span class="s1">            - sklearn.pipeline.FeatureUnion:</span>
+<span class="gp">... </span><span class="s1">                - sklearn.decomposition.pca.PCA:</span>
+<span class="gp">... </span><span class="s1">                    n_components: 3</span>
+<span class="gp">... </span><span class="s1">                - sklearn.pipeline.Pipeline:</span>
+<span class="gp">... </span><span class="s1">                    - sklearn.preprocessing.data.MinMaxScaler</span>
+<span class="gp">... </span><span class="s1">                    - sklearn.decomposition.truncated_svd.TruncatedSVD:</span>
+<span class="gp">... </span><span class="s1">                        n_components: 2</span>
+<span class="gp">... </span><span class="s1">            - sklearn.ensemble.forest.RandomForestClassifier:</span>
+<span class="gp">... </span><span class="s1">                max_depth: 3</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">raw_config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scikit_learn_pipeline</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">pipeline_from_definition</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pipe_definition</strong> – List of steps for the Pipeline / FeatureUnion</li>
+<li><strong>constructor_class</strong> – What to place the list of transformers into,
+either sklearn.pipeline.Pipeline/FeatureUnion</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pipeline</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">sklearn.pipeline.Pipeline</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.serializer.pipeline_into_definition">
+<span id="pipeline-into-definition"></span><h2>Pipeline into definition<a class="headerlink" href="#module-gordo_components.serializer.pipeline_into_definition" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gordo_components.serializer.pipeline_into_definition.pipeline_into_definition">
+<code class="descclassname">gordo_components.serializer.pipeline_into_definition.</code><code class="descname">pipeline_into_definition</code><span class="sig-paren">(</span><em>pipeline: sklearn.pipeline.Pipeline</em>, <em>prune_default_params: bool = False</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../_modules/gordo_components/serializer/pipeline_into_definition.html#pipeline_into_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.serializer.pipeline_into_definition.pipeline_into_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an instance of <code class="docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code> into a dict definition
+capable of being reconstructed with
+<code class="docutils literal notranslate"><span class="pre">gordo_components.serializer.pipeline_from_definition</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pipeline</strong> (<em>sklearn.pipeline.Pipeline</em>) – Instance of pipeline to decompose</li>
+<li><strong>prune_default_params</strong> (<em>bool</em>) – Whether to prune the default parameters found in current instance of the transformers
+vs what their default params are.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">definitions for the pipeline, compatible to be reconstructed with
+gordo_components.pipeline_translator.pipeline_from_definition</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">yaml</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gordo_components.model.models</span> <span class="k">import</span> <span class="n">KerasAutoEncoder</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;ae&#39;</span><span class="p">,</span> <span class="n">KerasAutoEncoder</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;feedforward_model&#39;</span><span class="p">))])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe_definition</span> <span class="o">=</span> <span class="n">pipeline_into_definition</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span>  <span class="c1"># It is now a standard python dict of primitives.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">pipe_definition</span><span class="p">))</span>
+<span class="go">sklearn.pipeline.Pipeline:</span>
+<span class="go">  memory: null</span>
+<span class="go">  steps:</span>
+<span class="go">  - sklearn.decomposition.pca.PCA:</span>
+<span class="go">      copy: true</span>
+<span class="go">      iterated_power: auto</span>
+<span class="go">      n_components: 4</span>
+<span class="go">      random_state: null</span>
+<span class="go">      svd_solver: auto</span>
+<span class="go">      tol: 0.0</span>
+<span class="go">      whiten: false</span>
+<span class="go">  - gordo_components.model.models.KerasAutoEncoder:</span>
+<span class="go">      kind: feedforward_model</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="watchman.html" class="btn btn-neutral float-right" title="Watchman" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dataset.html" class="btn btn-neutral float-left" title="Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

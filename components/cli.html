@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CLI &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="ML Server" href="server.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">ML Server</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gordo-components-cli">gordo-components CLI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gordo-components">gordo-components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gordo-components-build">build</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gordo-components-client">client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gordo-components-run-server">run-server</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gordo-components-run-watchman">run-watchman</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CLI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/cli.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cli">
+<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gordo-components-cli">
+<h2>gordo-components CLI<a class="headerlink" href="#gordo-components-cli" title="Permalink to this headline">¶</a></h2>
+<p>Available CLIs for Gordo:</p>
+<div class="section" id="gordo-components">
+<h3>gordo-components<a class="headerlink" href="#gordo-components" title="Permalink to this headline">¶</a></h3>
+<p>The main entry point for the CLI interface</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<div class="section" id="gordo-components-build">
+<h4>build<a class="headerlink" href="#gordo-components-build" title="Permalink to this headline">¶</a></h4>
+<p>Build a model and deposit it into ‘output_dir’ given the appropriate config
+settings.</p>
+<div class="line-block">
+<div class="line">Parameters</div>
+<div class="line">———-</div>
+<div class="line">output_dir: str</div>
+<div class="line-block">
+<div class="line">Directory to save model &amp; metadata to.</div>
+</div>
+<div class="line">model_config: str</div>
+<div class="line-block">
+<div class="line">String containing a yaml which will be parsed to a dict which will be used in</div>
+<div class="line">initializing the model. Should also contain key ‘type’ which references the</div>
+<div class="line">model to use. ie. KerasAutoEncoder</div>
+</div>
+<div class="line">data_config: dict</div>
+<div class="line-block">
+<div class="line">kwargs to be used in intializing the dataset. Should also</div>
+<div class="line">contain kwarg ‘type’ which references the dataset to use. ie. InfluxBackedDataset</div>
+</div>
+<div class="line">metadata: dict</div>
+<div class="line-block">
+<div class="line">Any additional metadata to save under the key ‘user-defined’</div>
+</div>
+<div class="line">model_register_dir: path</div>
+<div class="line-block">
+<div class="line">Path to a directory which will index existing models and their locations, used</div>
+<div class="line">for re-using old models instead of rebuilding them. If omitted then always</div>
+<div class="line">rebuild</div>
+</div>
+<div class="line">print_cv_scores: bool</div>
+<div class="line-block">
+<div class="line">Print cross validation scores to stdout</div>
+</div>
+<div class="line">model_parameter: List[Tuple]</div>
+<div class="line-block">
+<div class="line">List of model key-values, wheres the values will be injected into the model</div>
+<div class="line">config wherever there is a jinja variable with the key.</div>
+</div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components build <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>OUTPUT_DIR<span class="o">]</span> <span class="o">[</span>MODEL_CONFIG<span class="o">]</span> <span class="o">[</span>DATA_CONFIG<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-metadata">
+<code class="descname">--metadata</code><code class="descclassname"> &lt;metadata&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-build-metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-model-register-dir">
+<code class="descname">--model-register-dir</code><code class="descclassname"> &lt;model_register_dir&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-build-model-register-dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-print-cv-scores">
+<code class="descname">--print-cv-scores</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-build-print-cv-scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints CV scores to stdout</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-model-parameter">
+<code class="descname">--model-parameter</code><code class="descclassname"> &lt;model_parameter&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-build-model-parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key-Value pair for a model parameter and its value, may use this option multiple times. Separate key,valye by a comma. ie: –model-parameter key,val –model-parameter some_key,some_value</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-arg-output-dir">
+<code class="descname">OUTPUT_DIR</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-build-arg-output-dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-arg-model-config">
+<code class="descname">MODEL_CONFIG</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-build-arg-model-config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-build-arg-data-config">
+<code class="descname">DATA_CONFIG</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-build-arg-data-config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional argument</p>
+</dd></dl>
+
+<p class="rubric">Environment variables</p>
+<span class="target" id="gordo-components-build-output-dir-output-dir"></span><dl class="envvar">
+<dt>
+<code class="descname">OUTPUT_DIR</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-build-arg-output-dir"><code class="xref std std-option docutils literal notranslate"><span class="pre">OUTPUT_DIR</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-build-model-config-model-config"></span><dl class="envvar">
+<dt>
+<code class="descname">MODEL_CONFIG</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-build-arg-model-config"><code class="xref std std-option docutils literal notranslate"><span class="pre">MODEL_CONFIG</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-build-data-config-data-config"></span><dl class="envvar">
+<dt>
+<code class="descname">DATA_CONFIG</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-build-arg-data-config"><code class="xref std std-option docutils literal notranslate"><span class="pre">DATA_CONFIG</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-build-metadata-metadata"></span><dl class="envvar">
+<dt>
+<code class="descname">METADATA</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-build-metadata"><code class="xref std std-option docutils literal notranslate"><span class="pre">--metadata</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-build-model-register-dir-model-register-dir"></span><dl class="envvar">
+<dt>
+<code class="descname">MODEL_REGISTER_DIR</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-build-model-register-dir"><code class="xref std std-option docutils literal notranslate"><span class="pre">--model-register-dir</span></code></a></div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="gordo-components-client">
+<h4>client<a class="headerlink" href="#gordo-components-client" title="Permalink to this headline">¶</a></h4>
+<p>Entry sub-command for client related activities</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components client <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-project">
+<code class="descname">--project</code><code class="descclassname"> &lt;project&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-project" title="Permalink to this definition">¶</a></dt>
+<dd><p>The project to target</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-target">
+<code class="descname">--target</code><code class="descclassname"> &lt;target&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single target, instead of all project targets</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-host">
+<code class="descname">--host</code><code class="descclassname"> &lt;host&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>The host the server is running on</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-port">
+<code class="descname">--port</code><code class="descclassname"> &lt;port&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Port the server is running on</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-scheme">
+<code class="descname">--scheme</code><code class="descclassname"> &lt;scheme&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-scheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>tcp/http/https</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-gordo-version">
+<code class="descname">--gordo-version</code><code class="descclassname"> &lt;gordo_version&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-gordo-version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Version of gordo</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-batch-size">
+<code class="descname">--batch-size</code><code class="descclassname"> &lt;batch_size&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-batch-size" title="Permalink to this definition">¶</a></dt>
+<dd><p>How many samples to send</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-parallelism">
+<code class="descname">--parallelism</code><code class="descclassname"> &lt;parallelism&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-parallelism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum asynchronous jobs to run</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-metadata">
+<code class="descname">--metadata</code><code class="descclassname"> &lt;metadata&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key-Value pair to be entered as metadata labels, may use this option multiple times. to be separated by a comma. ie: –metadata key,val –metadata some key,some value</p>
+</dd></dl>
+
+<div class="section" id="gordo-components-client-download-model">
+<h5>download-model<a class="headerlink" href="#gordo-components-client-download-model" title="Permalink to this headline">¶</a></h5>
+<p>Download the actual model from the target and write to an output directory</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components client download-model <span class="o">[</span>OPTIONS<span class="o">]</span> OUTPUT_DIR
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-download-model-arg-output-dir">
+<code class="descname">OUTPUT_DIR</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-client-download-model-arg-output-dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="gordo-components-client-metadata">
+<h5>metadata<a class="headerlink" href="#gordo-components-client-metadata" title="Permalink to this headline">¶</a></h5>
+<p>Get metadata from a given endpoint</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components client metadata <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-metadata-output-file">
+<code class="descname">--output-file</code><code class="descclassname"> &lt;output_file&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-metadata-output-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional output file to save metadata</p>
+</dd></dl>
+
+</div>
+<div class="section" id="gordo-components-client-predict">
+<h5>predict<a class="headerlink" href="#gordo-components-client-predict" title="Permalink to this headline">¶</a></h5>
+<p>Run some predictions against the target</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components client predict <span class="o">[</span>OPTIONS<span class="o">]</span> START END
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-data-provider">
+<code class="descname">--data-provider</code><code class="descclassname"> &lt;data_provider&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-data-provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>DataProvider dict</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-output-dir">
+<code class="descname">--output-dir</code><code class="descclassname"> &lt;output_dir&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-output-dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save output prediction dataframes in a directory</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-influx-uri">
+<code class="descname">--influx-uri</code><code class="descclassname"> &lt;influx_uri&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-influx-uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format: &lt;username&gt;:&lt;password&gt;&#64;&lt;host&gt;:&lt;port&gt;/&lt;optional-path&gt;/&lt;db_name&gt;</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-influx-api-key">
+<code class="descname">--influx-api-key</code><code class="descclassname"> &lt;influx_api_key&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-influx-api-key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key to provide to the destination influx</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-influx-recreate-db">
+<code class="descname">--influx-recreate-db</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-influx-recreate-db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recreate the desintation DB before writing</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-forward-resampled-sensors">
+<code class="descname">--forward-resampled-sensors</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-forward-resampled-sensors" title="Permalink to this definition">¶</a></dt>
+<dd><p>forward the resampled sensor values</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-ignore-unhealthy-targets">
+<code class="descname">--ignore-unhealthy-targets</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-ignore-unhealthy-targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ignore any unhealthy targets. By default the client will raise an error if any unhealthy endpoints are encountered.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-arg-start">
+<code class="descname">START</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-arg-start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-client-predict-arg-end">
+<code class="descname">END</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-client-predict-arg-end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="gordo-components-run-server">
+<h4>run-server<a class="headerlink" href="#gordo-components-run-server" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components run-server <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-host">
+<code class="descname">--host</code><code class="descclassname"> &lt;host&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>The host to run the server on.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-port">
+<code class="descname">--port</code><code class="descclassname"> &lt;port&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-port" title="Permalink to this definition">¶</a></dt>
+<dd><p>The port to run the server on.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-host">
+<code class="descname">--src-influx-host</code><code class="descclassname"> &lt;src_influx_host&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-port">
+<code class="descname">--src-influx-port</code><code class="descclassname"> &lt;src_influx_port&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-username">
+<code class="descname">--src-influx-username</code><code class="descclassname"> &lt;src_influx_username&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-password">
+<code class="descname">--src-influx-password</code><code class="descclassname"> &lt;src_influx_password&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-database">
+<code class="descname">--src-influx-database</code><code class="descclassname"> &lt;src_influx_database&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-database" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-path">
+<code class="descname">--src-influx-path</code><code class="descclassname"> &lt;src_influx_path&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-measurement">
+<code class="descname">--src-influx-measurement</code><code class="descclassname"> &lt;src_influx_measurement&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-measurement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-value">
+<code class="descname">--src-influx-value</code><code class="descclassname"> &lt;src_influx_value&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-api-key">
+<code class="descname">--src-influx-api-key</code><code class="descclassname"> &lt;src_influx_api_key&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-api-key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-server-src-influx-api-key-header">
+<code class="descname">--src-influx-api-key-header</code><code class="descclassname"> &lt;src_influx_api_key_header&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-server-src-influx-api-key-header" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Environment variables</p>
+<span class="target" id="gordo-components-run-server-src-influx-host-src-influxdb-host"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_HOST</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-host"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-host</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-port-src-influxdb-port"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_PORT</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-port"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-port</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-username-src-influxdb-username"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_USERNAME</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-username"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-username</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-password-src-influxdb-password"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_PASSWORD</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-password"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-password</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-database-src-influxdb-database"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_DATABASE</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-database"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-database</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-path-src-influxdb-path"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_PATH</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-path"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-path</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-measurement-src-influxdb-measurement"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_MEASUREMENT</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-measurement"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-measurement</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-value-src-influxdb-value-name"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_VALUE_NAME</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-value"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-value</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-api-key-src-influxdb-api-key"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_API_KEY</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-api-key"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-api-key</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-server-src-influx-api-key-header-src-influxdb-api-key-header"></span><dl class="envvar">
+<dt>
+<code class="descname">SRC_INFLUXDB_API_KEY_HEADER</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-server-src-influx-api-key-header"><code class="xref std std-option docutils literal notranslate"><span class="pre">--src-influx-api-key-header</span></code></a></div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="gordo-components-run-watchman">
+<h4>run-watchman<a class="headerlink" href="#gordo-components-run-watchman" title="Permalink to this headline">¶</a></h4>
+<p>Start the Gordo Watchman server for this project. Which is responsible
+for dynamically comparing expected URLs derived from a project config fle
+against those actually deployed to determine and report their health.</p>
+<div class="line-block">
+<div class="line">Must have the following environment variables set:</div>
+<div class="line-block">
+<div class="line">PROJECT_NAME: project_name for the config file</div>
+<div class="line">TARGET_NAMES: A list of non-sanitized machine / target names</div>
+</div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>gordo-components run-watchman <span class="o">[</span>OPTIONS<span class="o">]</span> PROJECT_NAME PROJECT_VERSION
+                              TARGET_NAMES
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-host">
+<code class="descname">--host</code><code class="descclassname"> &lt;host&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>The host to run the server on.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-port">
+<code class="descname">--port</code><code class="descclassname"> &lt;port&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-port" title="Permalink to this definition">¶</a></dt>
+<dd><p>The port to run the server on.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-debug">
+<code class="descname">--debug</code><code class="descclassname"> &lt;debug&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run in debug mode</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-namespace">
+<code class="descname">--namespace</code><code class="descclassname"> &lt;namespace&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace watchman should make requests in for ML servers</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-ambassador-namespace">
+<code class="descname">--ambassador-namespace</code><code class="descclassname"> &lt;ambassador_namespace&gt;</code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-ambassador-namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace watchman expects Ambassador to be in</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-arg-project-name">
+<code class="descname">PROJECT_NAME</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-arg-project-name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-arg-project-version">
+<code class="descname">PROJECT_VERSION</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-arg-project-version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gordo-components-run-watchman-arg-target-names">
+<code class="descname">TARGET_NAMES</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gordo-components-run-watchman-arg-target-names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<p class="rubric">Environment variables</p>
+<span class="target" id="gordo-components-run-watchman-project-name-project-name"></span><dl class="envvar">
+<dt>
+<code class="descname">PROJECT_NAME</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-watchman-arg-project-name"><code class="xref std std-option docutils literal notranslate"><span class="pre">PROJECT_NAME</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-watchman-project-version-project-version"></span><dl class="envvar">
+<dt>
+<code class="descname">PROJECT_VERSION</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-watchman-arg-project-version"><code class="xref std std-option docutils literal notranslate"><span class="pre">PROJECT_VERSION</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-watchman-target-names-target-names"></span><dl class="envvar">
+<dt>
+<code class="descname">TARGET_NAMES</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-watchman-arg-target-names"><code class="xref std std-option docutils literal notranslate"><span class="pre">TARGET_NAMES</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-watchman-namespace-namespace"></span><dl class="envvar">
+<dt>
+<code class="descname">NAMESPACE</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-watchman-namespace"><code class="xref std std-option docutils literal notranslate"><span class="pre">--namespace</span></code></a></div></blockquote>
+</dd></dl>
+
+<span class="target" id="gordo-components-run-watchman-ambassador-namespace-ambassador-namespace"></span><dl class="envvar">
+<dt>
+<code class="descname">AMBASSADOR_NAMESPACE</code></dt>
+<dd><blockquote>
+<div>Provide a default for <a class="reference internal" href="#cmdoption-gordo-components-run-watchman-ambassador-namespace"><code class="xref std std-option docutils literal notranslate"><span class="pre">--ambassador-namespace</span></code></a></div></blockquote>
+</dd></dl>
+
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="server.html" class="btn btn-neutral float-left" title="ML Server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

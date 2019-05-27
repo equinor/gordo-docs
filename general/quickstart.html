@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quick start &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Welcome to Gordo Components’ documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Quick start</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/general/quickstart.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quick-start">
+<h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<p>The concept of <code class="docutils literal notranslate"><span class="pre">Gordo</span></code> is to (as of now) process, only, <em>timeseries</em>
+datasets which are comprised of sensors/tag identifies. The workflow
+launches the collection of these tags, building of a defined model and
+subsequent deployment of a ML Server which acts as a REST interface
+in front of the model.</p>
+<p>A typical config file might look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">machines</span><span class="p">:</span>
+
+  <span class="c1"># This machine specifies all keys, and will train a model on one month</span>
+  <span class="c1"># worth of data, as shown in its train_start/end_date dataset keys.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some-name-here</span>
+    <span class="nt">dataset</span><span class="p">:</span>
+      <span class="nt">train_start_date</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2018-01-01T00:00:00Z</span>
+      <span class="nt">train_end_date</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2018-02-01T00:00:00Z</span>
+      <span class="nt">resolution</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2T</span>  <span class="c1"># Resample timeseries at 2min intervals (pandas freq strings)</span>
+      <span class="nt">tags</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tag-1</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tag-2</span>
+    <span class="nt">model</span><span class="p">:</span>
+      <span class="nt">sklearn.pipeline.Pipeline</span><span class="p">:</span>
+        <span class="nt">steps</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sklearn.preprocessing.data.MinMaxScaler</span>
+          <span class="p p-Indicator">-</span> <span class="nt">gordo_components.model.models.KerasAutoEncoder</span><span class="p">:</span>
+              <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">feedforward_hourglass</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">key1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some-value</span>
+
+  <span class="c1"># This machine does NOT specify all keys, it is missing &#39;model&#39; but will</span>
+  <span class="c1"># have the &#39;model&#39; under &#39;globals&#39; inserted as its default.</span>
+  <span class="c1"># And will train a model on one month as well.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some-name-here</span>
+    <span class="nt">dataset</span><span class="p">:</span>
+      <span class="nt">train_start_date</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2018-01-01T00:00:00Z</span>
+      <span class="nt">train_end_date</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2018-02-01T00:00:00Z</span>
+      <span class="nt">resolution</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2T</span>  <span class="c1"># Resample timeseries at 2min intervals (pandas freq strings)</span>
+      <span class="nt">tags</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tag-1</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tag-2</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">key1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some-different-value-if-you-want</span>
+      <span class="nt">nested-keys-allowed</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">correct</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">globals</span><span class="p">:</span>
+  <span class="nt">model</span><span class="p">:</span>
+    <span class="nt">sklearn.pipeline.Pipeline</span><span class="p">:</span>
+      <span class="nt">steps</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sklearn.preprocessing.data.MinMaxScaler</span>
+        <span class="p p-Indicator">-</span> <span class="nt">gordo_components.model.models.KerasAutoEncoder</span><span class="p">:</span>
+            <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">feedforward_model</span>
+
+  <span class="nt">metadata</span><span class="p">:</span>
+    <span class="nt">what-does-this-do</span><span class="p">:</span> <span class="s">&quot;This</span><span class="nv"> </span><span class="s">metadata</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">get</span><span class="nv"> </span><span class="s">mapped</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">every</span><span class="nv"> </span><span class="s">machine&#39;s</span><span class="nv"> </span><span class="s">metadata!&quot;</span>
+</pre></div>
+</div>
+<p>One can experiment locally with Gordo through the Jupyter Notebooks provided in
+the <a class="reference external" href="https://github.com/equinor/gordo-components/tree/master/examples">examples</a>
+directory of the repository.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Gordo Components’ documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

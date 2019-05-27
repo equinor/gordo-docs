@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Builder &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Proivers &amp; Readers" href="data_provider.html" />
+    <link rel="prev" title="Transformer Functions" href="model/transformer-funcs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model/model.html">Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Builder</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.builder.build_model">Model builder</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Builder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/builder.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="builder">
+<h1>Builder<a class="headerlink" href="#builder" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gordo_components.builder.build_model">
+<span id="model-builder"></span><h2>Model builder<a class="headerlink" href="#module-gordo_components.builder.build_model" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gordo_components.builder.build_model.build_model">
+<code class="descclassname">gordo_components.builder.build_model.</code><code class="descname">build_model</code><span class="sig-paren">(</span><em>model_config: dict, data_config: Union[gordo_components.dataset.base.GordoBaseDataset, dict], metadata: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/builder/build_model.html#build_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.builder.build_model.build_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a model and serialize to a directory for later serving.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model_config</strong> (<em>dict</em>) – <p>Mapping of Model to initialize and any additional kwargs which are to be used in it’s initialization.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;KerasAutoEncoder&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;feedforward_hourglass&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><strong>data_config</strong> (<em>dict</em>) – Mapping of the Dataset to initialize, following the same logic as model_config.</li>
+<li><strong>metadata</strong> (<em>dict</em>) – Mapping of arbitrary metadata data.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tuple[sklearn.base.BaseEstimator, dict]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.builder.build_model.calculate_model_key">
+<code class="descclassname">gordo_components.builder.build_model.</code><code class="descname">calculate_model_key</code><span class="sig-paren">(</span><em>model_config: dict</em>, <em>data_config: dict</em>, <em>metadata: Optional[dict] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/gordo_components/builder/build_model.html#calculate_model_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.builder.build_model.calculate_model_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a hash-key from a model and data-config.</p>
+<p class="rubric">Notes</p>
+<p>Ignores the data_provider key since this is an complicated object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model_config</strong> (<em>dict</em>) – Config for the model. See
+<a class="reference internal" href="#gordo_components.builder.build_model.build_model" title="gordo_components.builder.build_model.build_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.builder.build_model.build_model()</span></code></a>.</li>
+<li><strong>data_config</strong> (<em>dict</em>) – Config for the data-configuration. See
+<a class="reference internal" href="#gordo_components.builder.build_model.build_model" title="gordo_components.builder.build_model.build_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.builder.build_model.build_model()</span></code></a>.</li>
+<li><strong>metadata</strong> (<em>Optional</em><em>[</em><em>dict</em><em>] </em><em>= None</em>) – Metadata for the models. See
+<a class="reference internal" href="#gordo_components.builder.build_model.build_model" title="gordo_components.builder.build_model.build_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.builder.build_model.build_model()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A 512 byte hex value as a string based on the content of the parameters.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">calculate_model_key</span><span class="p">(</span><span class="n">model_config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;something&quot;</span><span class="p">},</span>
+<span class="gp">... </span><span class="n">data_config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tag_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;tag1&quot;</span><span class="p">,</span> <span class="s2">&quot;tag 2&quot;</span><span class="p">]}</span> <span class="p">))</span>
+<span class="go">128</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.builder.build_model.provide_saved_model">
+<code class="descclassname">gordo_components.builder.build_model.</code><code class="descname">provide_saved_model</code><span class="sig-paren">(</span><em>model_config: dict, data_config: dict, metadata: dict, output_dir: Union[os.PathLike, str], model_register_dir: Union[os.PathLike, str] = None, replace_cache=False</em><span class="sig-paren">)</span> &#x2192; Union[os.PathLike, str]<a class="reference internal" href="../_modules/gordo_components/builder/build_model.html#provide_saved_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.builder.build_model.provide_saved_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that the desired model exists on disk, and returns the path to it.</p>
+<p>Builds the model if needed, or finds it among already existing models if
+<code class="docutils literal notranslate"><span class="pre">model_register_dir</span></code> is non-None, and we find the model there. If
+<cite>model_register_dir</cite> is set we will also store the model-location of the generated
+model there for future use. Think about it as a cache that is never emptied.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model_config</strong> (<em>dict</em>) – Config for the model. See
+<a class="reference internal" href="#gordo_components.builder.build_model.build_model" title="gordo_components.builder.build_model.build_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.builder.build_model.build_model()</span></code></a>.</li>
+<li><strong>data_config</strong> (<em>dict</em>) – Config for the data-configuration. See
+<a class="reference internal" href="#gordo_components.builder.build_model.build_model" title="gordo_components.builder.build_model.build_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.builder.build_model.build_model()</span></code></a>.</li>
+<li><strong>metadata</strong> (<em>dict</em>) – Extra metadata to be added to the built models if it is built. See
+<a class="reference internal" href="#gordo_components.builder.build_model.build_model" title="gordo_components.builder.build_model.build_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.builder.build_model.build_model()</span></code></a>.</li>
+<li><strong>output_dir</strong> (<em>Union</em><em>[</em><em>os.PathLike</em><em>, </em><em>str</em><em>]</em>) – A path to where the model will be deposited if it is built.</li>
+<li><strong>model_register_dir</strong> – A path to a register, see <cite>gordo_components.util.disk_registry</cite>. If this is None
+then always build the model, otherwise try to resolve the model from the
+registry.</li>
+<li><strong>replace_cache</strong> (<em>bool</em>) – Forces a rebuild of the model, and replaces the entry in the cache with the new
+model.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Path to the model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Union[os.PathLike, str]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data_provider.html" class="btn btn-neutral float-right" title="Data Proivers &amp; Readers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="model/transformer-funcs.html" class="btn btn-neutral float-left" title="Transformer Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

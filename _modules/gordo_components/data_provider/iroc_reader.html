@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.data_provider.iroc_reader &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.data_provider.iroc_reader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.data_provider.iroc_reader</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">azure.datalake.store</span> <span class="k">import</span> <span class="n">core</span>
+
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.azure_utils</span> <span class="k">import</span> <span class="n">walk_azure</span>
+<span class="kn">from</span> <span class="nn">gordo_components.data_provider.base</span> <span class="k">import</span> <span class="n">GordoBaseDataProvider</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">import</span> <span class="n">SensorTag</span>
+<span class="kn">from</span> <span class="nn">gordo_components.dataset.sensor_tag</span> <span class="k">import</span> <span class="n">to_list_of_strings</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="IrocReader"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.iroc_reader.IrocReader">[docs]</a><span class="k">class</span> <span class="nc">IrocReader</span><span class="p">(</span><span class="n">GordoBaseDataProvider</span><span class="p">):</span>
+    <span class="n">ASSET_TO_PATH</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ninenine&quot;</span><span class="p">:</span> <span class="s2">&quot;/raw/plant/uon/cygnet/ninenine/history&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="IrocReader.can_handle_tag"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.iroc_reader.IrocReader.can_handle_tag">[docs]</a>    <span class="k">def</span> <span class="nf">can_handle_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">asset</span> <span class="ow">in</span> <span class="n">IrocReader</span><span class="o">.</span><span class="n">ASSET_TO_PATH</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">AzureDLFileSystem</span><span class="p">,</span> <span class="n">threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a reader for tags from IROC.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">threads</span>
+
+<div class="viewcode-block" id="IrocReader.load_series"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.iroc_reader.IrocReader.load_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">tag_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">],</span>
+        <span class="n">base_path</span><span class="o">=</span><span class="s2">&quot;raw/plant/uon/cygnet/ninenine/history&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See GordoBaseDataProvider for documentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tag_list</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Iroc reader called with empty tag_list, returning none&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">to_ts</span> <span class="o">&lt;</span> <span class="n">from_ts</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Iroc reader called with to_ts: </span><span class="si">{to_ts}</span><span class="s2"> before from_ts: </span><span class="si">{from_ts}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">base_path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+        <span class="c1"># We query with an extra day on both sides since the way the files are</span>
+        <span class="c1"># organized in the datalake does not account for timezones, so some timestamps</span>
+        <span class="c1"># are in the wrong files</span>
+
+        <span class="n">all_base_paths</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{base_path}</span><span class="s2">/</span><span class="si">{t.year:0&gt;4d}</span><span class="s2">/</span><span class="si">{t.month:0&gt;2d}</span><span class="s2">/</span><span class="si">{t.day:0&gt;2d}</span><span class="s2">/&quot;</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">from_ts</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="s2">&quot;1D&quot;</span><span class="p">),</span>
+                <span class="n">end</span><span class="o">=</span><span class="n">to_ts</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="s2">&quot;1D&quot;</span><span class="p">),</span>
+                <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">fetched_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_iroc_files_from_paths</span><span class="p">(</span>
+            <span class="n">all_base_paths</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">,</span> <span class="n">tag_list</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fetched_tags</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Found no data for tags </span><span class="si">{tag_list}</span><span class="s2"> in the daterange </span><span class="si">{from_ts}</span><span class="s2"> to &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{to_ts}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">concatted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">fetched_tags</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">concatted</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag_list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Did not find data for all tags, the missing tags are &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;{set(to_list_of_strings(tag_list))-set(concatted.columns)}&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">concatted</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">withouth_na</span> <span class="o">=</span> <span class="n">concatted</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">withouth_na</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">withouth_na</span></div>
+
+    <span class="k">def</span> <span class="nf">_fetch_all_iroc_files_from_paths</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">all_base_paths</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">tag_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="c1"># Generator over all files in all of the base_paths</span>
+        <span class="k">def</span> <span class="nf">_all_files</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">b_path</span> <span class="ow">in</span> <span class="n">all_base_paths</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">walk_azure</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">b_path</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">f</span>
+
+        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="c1"># Pandas.concat makes the generator into a list anyway, so no extra memory</span>
+            <span class="c1"># is used here</span>
+            <span class="n">fetched_tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">file_path</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_iroc_df_from_azure</span><span class="p">(</span>
+                        <span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+                        <span class="n">from_ts</span><span class="o">=</span><span class="n">from_ts</span><span class="p">,</span>
+                        <span class="n">to_ts</span><span class="o">=</span><span class="n">to_ts</span><span class="p">,</span>
+                        <span class="n">tag_list</span><span class="o">=</span><span class="n">tag_list</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">_all_files</span><span class="p">(),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">fetched_tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">tags</span> <span class="k">for</span> <span class="n">tags</span> <span class="ow">in</span> <span class="n">fetched_tags</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">tags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">fetched_tags</span>
+
+    <span class="k">def</span> <span class="nf">_read_iroc_df_from_azure</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span>
+    <span class="p">):</span>
+        <span class="n">adls_file_system_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Attempting to open IROC file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">adls_file_system_client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">read_iroc_file</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">df</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Problem parsing file </span><span class="si">{file_path}</span><span class="s2">, skipping.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="read_iroc_file"><a class="viewcode-back" href="../../../components/data_provider.html#gordo_components.data_provider.iroc_reader.read_iroc_file">[docs]</a><span class="k">def</span> <span class="nf">read_iroc_file</span><span class="p">(</span>
+    <span class="n">file_obj</span><span class="p">,</span> <span class="n">from_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SensorTag</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a single iroc timeseries csv, and returns it as a pandas.DataFrame.</span>
+<span class="sd">    The returned dataframe has timestamps as a DateTimeIndex, and upto one column</span>
+<span class="sd">    per tag in tag_list, but excluding any tags which does not exist in the csv.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_obj: str or path object or file-like object</span>
+<span class="sd">        File object to read iroc timeseries data from</span>
+<span class="sd">    from_ts</span>
+<span class="sd">        Only keep timestamps later or equal than this</span>
+<span class="sd">    to_ts</span>
+<span class="sd">        Only keep timestamps earlier than this</span>
+<span class="sd">    tag_list</span>
+<span class="sd">        Only keep tags in this list.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        Dataframe with timestamps as a DateTimeIndex, and up to one column</span>
+<span class="sd">        per tag in tag_list, but excluding any tags which does not exist in the</span>
+<span class="sd">        csv.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_obj</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">to_list_of_strings</span><span class="p">(</span><span class="n">tag_list</span><span class="p">))]</span>
+    <span class="c1"># Note, there are some &quot;digital&quot; sensors with string values,</span>
+    <span class="c1"># now they are just NaN converted</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">,</span> <span class="n">downcast</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;tag&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">from_ts</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">to_ts</span><span class="p">)]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

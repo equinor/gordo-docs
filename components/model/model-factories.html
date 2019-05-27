@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Model factories &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Transformer Functions" href="transformer-funcs.html" />
+    <link rel="prev" title="Models" href="model.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="model.html">Models</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="model.html#base-model">Base Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="model.html#custom-gordo-models">Custom Gordo models</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Model factories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-gordo_components.model.factories.feedforward_autoencoder">feedforward factories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gordo_components.model.factories.lstm_autoencoder">lstm factories</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="transformer-funcs.html">Transformer Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="model.html">Models</a> &raquo;</li>
+        
+      <li>Model factories</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/model/model-factories.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="model-factories">
+<h1>Model factories<a class="headerlink" href="#model-factories" title="Permalink to this headline">¶</a></h1>
+<p>Model factories are stand alone functions which take an arbitrary number of
+primitive parameters (int, float, list, dict, etc) and return a model which
+can then be used in the <code class="docutils literal notranslate"><span class="pre">kind</span></code> parameter of some Scikit-Learn like wrapper model.</p>
+<p>An example of this is <code class="docutils literal notranslate"><span class="pre">KerasAutoEncoder</span></code> which accepts a <code class="docutils literal notranslate"><span class="pre">kind</span></code> argument
+(as all custom gordo models do) and can be given <cite>feedforward_model</cite>. Meaning
+that function will be used to create the underlying Keras model for
+<code class="docutils literal notranslate"><span class="pre">KerasAutoEncoder</span></code></p>
+<div class="section" id="module-gordo_components.model.factories.feedforward_autoencoder">
+<span id="feedforward-factories"></span><h2>feedforward factories<a class="headerlink" href="#module-gordo_components.model.factories.feedforward_autoencoder" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gordo_components.model.factories.feedforward_autoencoder.feedforward_hourglass">
+<code class="descclassname">gordo_components.model.factories.feedforward_autoencoder.</code><code class="descname">feedforward_hourglass</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>encoding_layers: int = 3</em>, <em>compression_factor: float = 0.5</em>, <em>func: str = 'relu'</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; keras.engine.sequential.Sequential<a class="reference internal" href="../../_modules/gordo_components/model/factories/feedforward_autoencoder.html#feedforward_hourglass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.factories.feedforward_autoencoder.feedforward_hourglass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds an hourglass shaped neural network, with decreasing number of neurons
+as one gets deeper into the encoder network and increasing number
+of neurons as one gets out of the decoder network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n_features</strong> (<em>int</em>) – Number of input and output neurons</li>
+<li><strong>encoding_layers</strong> (<em>int</em>) – Number of layers from the input layer (exclusive) to the
+narrowest layer (inclusive). Must be &gt; 0. The total nr of layers
+including input and output layer will be 2*encoding_layers + 1.</li>
+<li><strong>compression_factor</strong> (<em>float</em>) – How small the smallest layer is as a ratio of n_features
+(smallest layer is rounded up to nearest integer). Must satisfy
+0 &lt;= compression_factor &lt;= 1.</li>
+<li><strong>func</strong> (<em>str</em>) – Activation function for the internal layers</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The resulting model will look like this when n_features = 10, encoding_layers= 3,
+and compression_factor = 0.3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+  <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+     <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+     <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+  <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+<span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">keras.models.Sequential</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">feedforward_hourglass</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
+<span class="go">7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[8, 7, 5, 5, 7, 8, 10]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">feedforward_hourglass</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[4, 4, 3, 3, 4, 4, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">feedforward_hourglass</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">compression_factor</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[7, 5, 2, 2, 5, 7, 10]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">feedforward_hourglass</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">encoding_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[5, 5, 10]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.model.factories.feedforward_autoencoder.feedforward_model">
+<code class="descclassname">gordo_components.model.factories.feedforward_autoencoder.</code><code class="descname">feedforward_model</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>enc_dim: List[int] = None</em>, <em>dec_dim: List[int] = None</em>, <em>enc_func: List[str] = None</em>, <em>dec_func: List[str] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; keras.engine.sequential.Sequential<a class="reference internal" href="../../_modules/gordo_components/model/factories/feedforward_autoencoder.html#feedforward_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.factories.feedforward_autoencoder.feedforward_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a customized keras neural network auto-encoder based on a config dict</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_features</strong> (<em>int</em>) – Number of features the dataset X will contain.</li>
+<li><strong>enc_dim</strong> (<em>list</em>) – List of numbers with the number of neurons in the encoding part</li>
+<li><strong>dec_dim</strong> (<em>list</em>) – List of numbers with the number of neurons in the decoding part</li>
+<li><strong>enc_func</strong> (<em>list</em>) – Activation functions for the encoder part</li>
+<li><strong>dec_func</strong> (<em>list</em>) – Activation functions for the decoder part</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">keras.models.Sequential</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.model.factories.feedforward_autoencoder.feedforward_symmetric">
+<code class="descclassname">gordo_components.model.factories.feedforward_autoencoder.</code><code class="descname">feedforward_symmetric</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>dims: Tuple[int</em>, <em>...] = (256</em>, <em>128</em>, <em>64)</em>, <em>funcs: Tuple[str</em>, <em>...] = ('relu'</em>, <em>'relu'</em>, <em>'relu')</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; keras.engine.sequential.Sequential<a class="reference internal" href="../../_modules/gordo_components/model/factories/feedforward_autoencoder.html#feedforward_symmetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.factories.feedforward_autoencoder.feedforward_symmetric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a symmetrical feedforward model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_features</strong> (<em>int</em>) – Number of input and output neurons</li>
+<li><strong>dim</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Number of neurons per layers for the encoder, reversed for the decoder.
+Must have len &gt; 0</li>
+<li><strong>funcs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – Activation functions for the internal layers</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">keras.models.Sequential</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.model.factories.lstm_autoencoder">
+<span id="lstm-factories"></span><h2>lstm factories<a class="headerlink" href="#module-gordo_components.model.factories.lstm_autoencoder" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gordo_components.model.factories.lstm_autoencoder.lstm_hourglass">
+<code class="descclassname">gordo_components.model.factories.lstm_autoencoder.</code><code class="descname">lstm_hourglass</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>lookback_window: int = 1</em>, <em>encoding_layers: int = 3</em>, <em>compression_factor: float = 0.5</em>, <em>func: str = 'relu'</em>, <em>out_func: str = 'linear'</em>, <em>optimizer: Union[str</em>, <em>keras.optimizers.Optimizer] = 'adam'</em>, <em>optimizer_kwargs: Dict[str</em>, <em>Any] = {}</em>, <em>loss: str = 'mse'</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; keras.engine.sequential.Sequential<a class="reference internal" href="../../_modules/gordo_components/model/factories/lstm_autoencoder.html#lstm_hourglass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.factories.lstm_autoencoder.lstm_hourglass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds an hourglass shaped neural network, with decreasing number of neurons
+as one gets deeper into the encoder network and increasing number
+of neurons as one gets out of the decoder network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_features</strong> (<em>int</em>) – Number of input and output neurons</li>
+<li><strong>encoding_layers</strong> (<em>int</em>) – <dl class="docutils">
+<dt>Number of layers from the input layer (exclusive) to the</dt>
+<dd>narrowest layer (inclusive). Must be &gt; 0. The total nr of layers
+including input and output layer will be 2*encoding_layers + 1.</dd>
+<dt>compression_factor: float</dt>
+<dd>How small the smallest layer is as a ratio of n_features
+(smallest layer is rounded up to nearest integer). Must satisfy
+0 &lt;= compression_factor &lt;= 1.</dd>
+</dl>
+</li>
+<li><strong>func</strong> (<em>str</em>) – Activation function for the internal layers</li>
+<li><strong>out_func</strong> (<em>str</em>) – Activation function for the output Dense layer.</li>
+<li><strong>optimizer</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Optimizer</em><em>]</em>) – If str then the name of the optimizer must be provided (e.x. “adam”).
+The arguments of the optimizer can be supplied in optimization_kwargs.
+If a Keras optimizer call the instance of the respective
+class (e.x. Adam(lr=0.01,beta_1=0.9, beta_2=0.999)).  If no arguments are
+provided Keras default values will be set.</li>
+<li><strong>optimizer_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The arguments for the chosen optimizer. If not provided Keras’
+default values will be used.</li>
+<li><strong>loss</strong> (<em>str</em>) – <dl class="docutils">
+<dt>Keras’ supported loss functions (e.x. “mse”, “MSE”, “mean_squared_error”</dt>
+<dd>for mean squared error,
+“mae”, “MAE”, “mean_absolute_error”
+for mean absolute error,
+for other supported loss functions
+refer to <a class="reference external" href="https://keras.io/losses/">https://keras.io/losses/</a>).</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">keras.models.Sequential</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">lstm_hourglass</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
+<span class="go">7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[8, 7, 5, 5, 7, 8, 10]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">lstm_hourglass</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[4, 4, 3, 3, 4, 4, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">lstm_hourglass</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">compression_factor</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[7, 5, 2, 2, 5, 7, 10]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">lstm_hourglass</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">encoding_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">))]</span>
+<span class="go">[5, 5, 10]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.model.factories.lstm_autoencoder.lstm_model">
+<code class="descclassname">gordo_components.model.factories.lstm_autoencoder.</code><code class="descname">lstm_model</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>lookback_window: int = 1</em>, <em>encoding_dim: Tuple[int</em>, <em>...] = (256</em>, <em>128</em>, <em>64)</em>, <em>decoding_dim: Tuple[int</em>, <em>...] = (64</em>, <em>128</em>, <em>256)</em>, <em>encoding_func: Tuple[str</em>, <em>...] = ('relu'</em>, <em>'relu'</em>, <em>'relu')</em>, <em>decoding_func: Tuple[str</em>, <em>...] = ('relu'</em>, <em>'relu'</em>, <em>'relu')</em>, <em>out_func: str = 'linear'</em>, <em>optimizer: Union[str</em>, <em>keras.optimizers.Optimizer] = 'adam'</em>, <em>optimizer_kwargs: Dict[str</em>, <em>Any] = {}</em>, <em>loss: str = 'mse'</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; keras.engine.sequential.Sequential<a class="reference internal" href="../../_modules/gordo_components/model/factories/lstm_autoencoder.html#lstm_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.factories.lstm_autoencoder.lstm_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a customized Keras LSTM neural network auto-encoder based on a config dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_features</strong> (<em>int</em>) – Number of features the dataset X will contain.</li>
+<li><strong>lookback_window</strong> (<em>int</em>) – Number of timesteps used to train the model.
+One timestep = current observation in the sample.
+Two timesteps = current observation + previous observation in the sample.
+…</li>
+<li><strong>encoding_func</strong> (<em>list</em>) – Activation functions for the encoder part.</li>
+<li><strong>decoding_func</strong> (<em>list</em>) – Activation functions for the decoder part.</li>
+<li><strong>func_output</strong> (<em>str</em>) – Activation function for the output Dense layer.</li>
+<li><strong>enc_dim</strong> (<em>list</em>) – List of numbers with the number of neurons in the encoding part.</li>
+<li><strong>dec_dim</strong> (<em>list</em>) – List of numbers with the number of neurons in the decoding part.</li>
+<li><strong>optimizer</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Optimizer</em><em>]</em>) – If str then the name of the optimizer must be provided (e.x. “adam”).
+The arguments of the optimizer can be supplied in optimization_kwargs.
+If a Keras optimizer call the instance of the respective
+class (e.x. Adam(lr=0.01,beta_1=0.9, beta_2=0.999)).  If no arguments are
+provided Keras default values will be set.</li>
+<li><strong>optimizer_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The arguments for the chosen optimizer. If not provided Keras’
+default values will be used.</li>
+<li><strong>loss</strong> (<em>str</em>) – <dl class="docutils">
+<dt>Keras’ supported loss functions (e.x. “mse”, “MSE”, “mean_squared_error”</dt>
+<dd>for mean squared error,
+“mae”, “MAE”, “mean_absolute_error”
+for mean absolute error,
+for other supported loss functions
+refer to <a class="reference external" href="https://keras.io/losses/">https://keras.io/losses/</a>).</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Returns Keras sequential model.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">keras.models.Sequential</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.model.factories.lstm_autoencoder.lstm_symmetric">
+<code class="descclassname">gordo_components.model.factories.lstm_autoencoder.</code><code class="descname">lstm_symmetric</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>lookback_window: int = 1</em>, <em>dims: Tuple[int</em>, <em>...] = (256</em>, <em>128</em>, <em>64)</em>, <em>funcs: Tuple[str</em>, <em>...] = ('relu'</em>, <em>'relu'</em>, <em>'relu')</em>, <em>out_func: str = 'linear'</em>, <em>optimizer: Union[str</em>, <em>keras.optimizers.Optimizer] = 'adam'</em>, <em>optimizer_kwargs: Dict[str</em>, <em>Any] = {}</em>, <em>loss: str = 'mse'</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; keras.engine.sequential.Sequential<a class="reference internal" href="../../_modules/gordo_components/model/factories/lstm_autoencoder.html#lstm_symmetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.model.factories.lstm_autoencoder.lstm_symmetric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a symmetrical lstm model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_features</strong> (<em>int</em>) – Number of input and output neurons</li>
+<li><strong>lookback_window</strong> (<em>int</em>) – Number of timesteps used to train the model.
+One timestep = sample contains current observation.
+Two timesteps = sample contains current and previous observation.
+…</li>
+<li><strong>dims</strong> (<em>Tuple</em><em>[</em><em>int</em><em>,</em><em>..</em><em>]</em>) – Number of neurons per layers for the encoder, reversed for the decoder.
+Must have len &gt; 0</li>
+<li><strong>funcs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – Activation functions for the internal layers</li>
+<li><strong>out_func</strong> (<em>str</em>) – Activation function for the output Dense layer.</li>
+<li><strong>optimizer</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Optimizer</em><em>]</em>) – If str then the name of the optimizer must be provided (e.x. “adam”).
+The arguments of the optimizer can be supplied in optimization_kwargs.
+If a Keras optimizer call the instance of the respective
+class (e.x. Adam(lr=0.01,beta_1=0.9, beta_2=0.999)).  If no arguments are
+provided Keras default values will be set.</li>
+<li><strong>optimizer_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The arguments for the chosen optimizer. If not provided Keras’
+default values will be used.</li>
+<li><strong>loss</strong> (<em>str</em>) – <dl class="docutils">
+<dt>Keras’ supported loss functions (e.x. “mse”, “MSE”, “mean_squared_error”</dt>
+<dd>for mean squared error,
+“mae”, “MAE”, “mean_absolute_error”
+for mean absolute error,
+for other supported loss functions
+refer to <a class="reference external" href="https://keras.io/losses/">https://keras.io/losses/</a>).</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Returns Keras sequential model.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">keras.models.Sequential</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="transformer-funcs.html" class="btn btn-neutral float-right" title="Transformer Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="model.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

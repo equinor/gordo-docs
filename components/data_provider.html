@@ -1,0 +1,716 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Data Proivers &amp; Readers &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets" href="dataset.html" />
+    <link rel="prev" title="Builder" href="builder.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Proivers &amp; Readers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.data_provider.providers">Data Providers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.data_provider.iroc_reader">IROC Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.data_provider.ncs_reader">NCS Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.data_provider.azure_utils">Azure Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gordo_components.data_provider.base">Base Data Provider</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Data Proivers &amp; Readers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/components/data_provider.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="data-proivers-readers">
+<h1>Data Proivers &amp; Readers<a class="headerlink" href="#data-proivers-readers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gordo_components.data_provider.providers">
+<span id="data-providers"></span><h2>Data Providers<a class="headerlink" href="#module-gordo_components.data_provider.providers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gordo_components.data_provider.providers.DataLakeProvider">
+<em class="property">class </em><code class="descclassname">gordo_components.data_provider.providers.</code><code class="descname">DataLakeProvider</code><span class="sig-paren">(</span><em>storename: str = 'dataplatformdlsprod'</em>, <em>interactive: bool = False</em>, <em>dl_service_auth_str: str = None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#DataLakeProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.DataLakeProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="gordo_components.data_provider.base.GordoBaseDataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider</span></code></a></p>
+<p>Instantiates a DataLakeBackedDataset, for fetching of data from the data lake</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storename</strong> – The store name to read data from</li>
+<li><strong>interactive</strong> (<em>bool</em>) – To perform authentication interactively, or attempt to do it a
+automatically, in such a case must provide ‘del_service_authS_tr’
+parameter or as ‘DL_SERVICE_AUTH_STR’ env var.</li>
+<li><strong>dl_service_auth_str</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – string on the format ‘tenant_id:service_id:service_secret’. To
+perform authentication automatically; will default to
+DL_SERVICE_AUTH_STR env var or None</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.DataLakeProvider.can_handle_tag">
+<code class="descname">can_handle_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#DataLakeProvider.can_handle_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.DataLakeProvider.can_handle_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements base method, see GordoBaseDataProvider</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.DataLakeProvider.load_series">
+<code class="descname">load_series</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; Iterable[pandas.core.series.Series]<a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#DataLakeProvider.load_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.DataLakeProvider.load_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>See
+<a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider.load_series" title="gordo_components.data_provider.base.GordoBaseDataProvider.load_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider.load_series()</span></code></a>
+for documentation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.data_provider.providers.InfluxDataProvider">
+<em class="property">class </em><code class="descclassname">gordo_components.data_provider.providers.</code><code class="descname">InfluxDataProvider</code><span class="sig-paren">(</span><em>measurement: str</em>, <em>value_name: str = 'Value'</em>, <em>api_key: str = None</em>, <em>api_key_header: str = None</em>, <em>client: influxdb._dataframe_client.DataFrameClient = None</em>, <em>uri: str = None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#InfluxDataProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.InfluxDataProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="gordo_components.data_provider.base.GordoBaseDataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>measurement</strong> (<em>str</em>) – Name of the measurement to select from in Influx</li>
+<li><strong>value_name</strong> (<em>str</em>) – Name of value to select, default to ‘Value’</li>
+<li><strong>api_key</strong> (<em>str</em>) – Api key to use in header</li>
+<li><strong>api_key_header</strong> (<em>str</em>) – Key of header to insert the api key for requests</li>
+<li><strong>uri</strong> (<em>str</em>) – Create a client from a URI
+format: &lt;username&gt;:&lt;password&gt;&#64;&lt;host&gt;:&lt;port&gt;/&lt;optional-path&gt;/&lt;db_name&gt;</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – These are passed directly to the init args of influxdb.DataFrameClient</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.InfluxDataProvider.can_handle_tag">
+<code class="descname">can_handle_tag</code><span class="sig-paren">(</span><em>tag: gordo_components.dataset.sensor_tag.SensorTag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#InfluxDataProvider.can_handle_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.InfluxDataProvider.can_handle_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if the dataprovider thinks it can possibly read this tag.
+Typically checks if the asset part of the tag is known to the reader.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>SensorTag - Dictionary with a &quot;tag&quot; key and optional &quot;asset&quot;</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.InfluxDataProvider.get_list_of_tags">
+<code class="descname">get_list_of_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#InfluxDataProvider.get_list_of_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.InfluxDataProvider.get_list_of_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries Influx for the list of tags, using a TTL cache of 600 seconds. The
+cache can be cleared with <code class="xref py py-func docutils literal notranslate"><span class="pre">cache_clear()</span></code> as is usual with cachetools.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of tags in Influx</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">typing.List[str]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.InfluxDataProvider.load_series">
+<code class="descname">load_series</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; Iterable[pandas.core.series.Series]<a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#InfluxDataProvider.load_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.InfluxDataProvider.load_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>See GordoBaseDataProvider for documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.InfluxDataProvider.read_single_sensor">
+<code class="descname">read_single_sensor</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime</em>, <em>to_ts: datetime.datetime</em>, <em>tag: str</em>, <em>measurement: str</em><span class="sig-paren">)</span> &#x2192; pandas.core.series.Series<a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#InfluxDataProvider.read_single_sensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.InfluxDataProvider.read_single_sensor" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>from_ts</strong> (<em>datetime</em>) – Datetime to start querying for data</li>
+<li><strong>to_ts</strong> (<em>datetime</em>) – Datetime to stop query for data</li>
+<li><strong>tag</strong> (<em>str</em>) – Name of the tag to match in influx</li>
+<li><strong>measurement</strong> (<em>str</em>) – name of the measurement to select from</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">One column DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gordo_components.data_provider.providers.RandomDataProvider">
+<em class="property">class </em><code class="descclassname">gordo_components.data_provider.providers.</code><code class="descname">RandomDataProvider</code><span class="sig-paren">(</span><em>min_size=100</em>, <em>max_size=300</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#RandomDataProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.RandomDataProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="gordo_components.data_provider.base.GordoBaseDataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider</span></code></a></p>
+<p>Get a GordoBaseDataset which returns unstructed values for X and y. Each instance
+uses the same seed, so should be a function (same input -&gt; same output)</p>
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.RandomDataProvider.can_handle_tag">
+<code class="descname">can_handle_tag</code><span class="sig-paren">(</span><em>tag: gordo_components.dataset.sensor_tag.SensorTag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#RandomDataProvider.can_handle_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.RandomDataProvider.can_handle_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if the dataprovider thinks it can possibly read this tag.
+Typically checks if the asset part of the tag is known to the reader.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>SensorTag - Dictionary with a &quot;tag&quot; key and optional &quot;asset&quot;</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.providers.RandomDataProvider.load_series">
+<code class="descname">load_series</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; Iterable[pandas.core.series.Series]<a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#RandomDataProvider.load_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.RandomDataProvider.load_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the required data as an iterable of series where each
+contains the values of the tag with time index</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>from_ts</strong> (<em>datetime - Datetime object representing the start of fetching data</em>) – </li>
+<li><strong>to_ts</strong> (<em>datetime - Datetime object representing the end of fetching data</em>) – </li>
+<li><strong>tag_list</strong> (<em>List</em><em>[</em><em>SensorTag</em><em>] </em><em>- List of tags to fetch</em><em>,</em>) – where each will end up being its own dataframe</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Iterable[pd.Series]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.data_provider.providers.load_series_from_multiple_providers">
+<code class="descclassname">gordo_components.data_provider.providers.</code><code class="descname">load_series_from_multiple_providers</code><span class="sig-paren">(</span><em>data_providers: List[gordo_components.data_provider.base.GordoBaseDataProvider], from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; Iterable[pandas.core.frame.DataFrame]<a class="reference internal" href="../_modules/gordo_components/data_provider/providers.html#load_series_from_multiple_providers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.providers.load_series_from_multiple_providers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the tags in <cite>tag_list</cite> using multiple instances of
+<a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="gordo_components.data_provider.base.GordoBaseDataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider</span></code></a> provided in the
+parameter <cite>data_providers</cite>. Will load a tag from the first data provider in the list
+which claims it. See
+<a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider.load_series" title="gordo_components.data_provider.base.GordoBaseDataProvider.load_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider.load_series()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The required tags as an iterable of series where each series contains
+the tag values along with a datetime index.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">typing.Iterable[pd.Series]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.data_provider.iroc_reader">
+<span id="iroc-reader"></span><h2>IROC Reader<a class="headerlink" href="#module-gordo_components.data_provider.iroc_reader" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gordo_components.data_provider.iroc_reader.IrocReader">
+<em class="property">class </em><code class="descclassname">gordo_components.data_provider.iroc_reader.</code><code class="descname">IrocReader</code><span class="sig-paren">(</span><em>client: azure.datalake.store.core.AzureDLFileSystem</em>, <em>threads: int = 50</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/iroc_reader.html#IrocReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.iroc_reader.IrocReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="gordo_components.data_provider.base.GordoBaseDataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider</span></code></a></p>
+<p>Creates a reader for tags from IROC.</p>
+<dl class="attribute">
+<dt id="gordo_components.data_provider.iroc_reader.IrocReader.ASSET_TO_PATH">
+<code class="descname">ASSET_TO_PATH</code><em class="property"> = {'ninenine': '/raw/plant/uon/cygnet/ninenine/history'}</em><a class="headerlink" href="#gordo_components.data_provider.iroc_reader.IrocReader.ASSET_TO_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.iroc_reader.IrocReader.can_handle_tag">
+<code class="descname">can_handle_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/iroc_reader.html#IrocReader.can_handle_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.iroc_reader.IrocReader.can_handle_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if the dataprovider thinks it can possibly read this tag.
+Typically checks if the asset part of the tag is known to the reader.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>SensorTag - Dictionary with a &quot;tag&quot; key and optional &quot;asset&quot;</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.iroc_reader.IrocReader.load_series">
+<code class="descname">load_series</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag], base_path='raw/plant/uon/cygnet/ninenine/history'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/iroc_reader.html#IrocReader.load_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.iroc_reader.IrocReader.load_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>See GordoBaseDataProvider for documentation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.data_provider.iroc_reader.read_iroc_file">
+<code class="descclassname">gordo_components.data_provider.iroc_reader.</code><code class="descname">read_iroc_file</code><span class="sig-paren">(</span><em>file_obj, from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../_modules/gordo_components/data_provider/iroc_reader.html#read_iroc_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.iroc_reader.read_iroc_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a single iroc timeseries csv, and returns it as a pandas.DataFrame.
+The returned dataframe has timestamps as a DateTimeIndex, and upto one column
+per tag in tag_list, but excluding any tags which does not exist in the csv.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_obj</strong> (<em>str</em><em> or </em><em>path object</em><em> or </em><em>file-like object</em>) – File object to read iroc timeseries data from</li>
+<li><strong>from_ts</strong> – Only keep timestamps later or equal than this</li>
+<li><strong>to_ts</strong> – Only keep timestamps earlier than this</li>
+<li><strong>tag_list</strong> – Only keep tags in this list.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dataframe with timestamps as a DateTimeIndex, and up to one column
+per tag in tag_list, but excluding any tags which does not exist in the
+csv.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pd.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.data_provider.ncs_reader">
+<span id="ncs-reader"></span><h2>NCS Reader<a class="headerlink" href="#module-gordo_components.data_provider.ncs_reader" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gordo_components.data_provider.ncs_reader.NcsReader">
+<em class="property">class </em><code class="descclassname">gordo_components.data_provider.ncs_reader.</code><code class="descname">NcsReader</code><span class="sig-paren">(</span><em>client: azure.datalake.store.core.AzureDLFileSystem</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/ncs_reader.html#NcsReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.ncs_reader.NcsReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="gordo_components.data_provider.base.GordoBaseDataProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gordo_components.data_provider.base.GordoBaseDataProvider</span></code></a></p>
+<p>Creates a reader for tags from the Norwegian Continental Shelf. Currently
+only supports a small subset of assets.</p>
+<dl class="attribute">
+<dt id="gordo_components.data_provider.ncs_reader.NcsReader.ASSET_TO_PATH">
+<code class="descname">ASSET_TO_PATH</code><em class="property"> = {'1101-sfb': '/raw/corporate/IMS Statfjord/sensordata/\u200b1101-SFB', '1125-kvb': '/raw/corporate/PI System Operation Norway/sensordata/1125-KVB', '1130-troa': '/raw/corporate/Aspen MS - IP21 Troll A/sensordata/1130-TROA', '1191-asgb': '/raw/corporate/PI System Operation North/sensordata/1191-ASGB', '1218-gkr': '/raw/corporate/PI System Manager Sleipner/sensordata/1218-GKR', '1755-gra': '/raw/corporate/Aspen MS - IP21 Grane/sensordata/1755-GRA', '1775-trob': '/raw/corporate/Aspen MS - IP21 Troll B/sensordata/1775-TROB', '1776-troc': '/raw/corporate/Aspen MS - IP21 Troll C/sensordata/1776-TROC'}</em><a class="headerlink" href="#gordo_components.data_provider.ncs_reader.NcsReader.ASSET_TO_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="gordo_components.data_provider.ncs_reader.NcsReader.base_path_from_asset">
+<em class="property">static </em><code class="descname">base_path_from_asset</code><span class="sig-paren">(</span><em>asset: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/ncs_reader.html#NcsReader.base_path_from_asset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.ncs_reader.NcsReader.base_path_from_asset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves an asset code to the datalake basepath containing the data.
+Returns None if it does not match any of the asset codes we know.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.ncs_reader.NcsReader.can_handle_tag">
+<code class="descname">can_handle_tag</code><span class="sig-paren">(</span><em>tag: gordo_components.dataset.sensor_tag.SensorTag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/ncs_reader.html#NcsReader.can_handle_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.ncs_reader.NcsReader.can_handle_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements GordoBaseDataProvider, see base class for documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.ncs_reader.NcsReader.load_series">
+<code class="descname">load_series</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; Iterable[pandas.core.series.Series]<a class="reference internal" href="../_modules/gordo_components/data_provider/ncs_reader.html#NcsReader.load_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.ncs_reader.NcsReader.load_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>See GordoBaseDataProvider for documentation</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="gordo_components.data_provider.ncs_reader.NcsReader.read_tag_files">
+<em class="property">static </em><code class="descname">read_tag_files</code><span class="sig-paren">(</span><em>adls_file_system_client: azure.datalake.store.core.AzureDLFileSystem</em>, <em>tag: gordo_components.dataset.sensor_tag.SensorTag</em>, <em>years: range</em><span class="sig-paren">)</span> &#x2192; pandas.core.series.Series<a class="reference internal" href="../_modules/gordo_components/data_provider/ncs_reader.html#NcsReader.read_tag_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.ncs_reader.NcsReader.read_tag_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download tag files for the given years into dataframes,
+and return as one dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>adls_file_system_client</strong> (<em>core.AzureDLFileSystem</em>) – the AzureDLFileSystem client to use</li>
+<li><strong>tag</strong> (<em>SensorTag</em>) – the tag to download data for</li>
+<li><strong>years</strong> (<em>range</em>) – range object providing years to include</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Series with all years for one tag.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pd.Series</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.data_provider.azure_utils">
+<span id="azure-utils"></span><h2>Azure Utils<a class="headerlink" href="#module-gordo_components.data_provider.azure_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gordo_components.data_provider.azure_utils.create_adls_client">
+<code class="descclassname">gordo_components.data_provider.azure_utils.</code><code class="descname">create_adls_client</code><span class="sig-paren">(</span><em>storename: str</em>, <em>dl_service_auth_str: str = None</em>, <em>interactive: bool = False</em><span class="sig-paren">)</span> &#x2192; azure.datalake.store.core.AzureDLFileSystem<a class="reference internal" href="../_modules/gordo_components/data_provider/azure_utils.html#create_adls_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.azure_utils.create_adls_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an ADLS file system client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>storename</strong> – Name of datalake store.</li>
+<li><strong>dl_service_auth_str</strong> – Authentication string to use</li>
+<li><strong>interactive</strong> – If true then use interactive authentication if dl_service_auth_str is not set</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Instance of AzureDLFileSystem, ready to use</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">core.AzureDLFileSystem</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.data_provider.azure_utils.get_datalake_token">
+<code class="descclassname">gordo_components.data_provider.azure_utils.</code><code class="descname">get_datalake_token</code><span class="sig-paren">(</span><em>interactive=True</em>, <em>dl_service_auth_str=None</em><span class="sig-paren">)</span> &#x2192; azure.datalake.store.lib.DataLakeCredential<a class="reference internal" href="../_modules/gordo_components/data_provider/azure_utils.html#get_datalake_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.azure_utils.get_datalake_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a token for azure datalake, either by parsing a datalake service
+authentication string or using interactive authentication</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>interactive</strong> – If true then fall back to interactive authentication in case
+<cite>dl_service_auth_str</cite> is empty</li>
+<li><strong>dl_service_auth_str</strong> – String on the format tenant:client_id:client_secret</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A lib.DataLakeCredential which can be used to authenticate towards the datalake</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">lib.DataLakeCredential</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.data_provider.azure_utils.walk_azure">
+<code class="descclassname">gordo_components.data_provider.azure_utils.</code><code class="descname">walk_azure</code><span class="sig-paren">(</span><em>client: azure.datalake.store.core.AzureDLFileSystem</em>, <em>base_path: str</em>, <em>include_regexp: Pattern[~AnyStr] = re.compile('.*')</em>, <em>exclude_regexp: Pattern[~AnyStr] = re.compile('a^')</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/azure_utils.html#walk_azure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.azure_utils.walk_azure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Walks azure datalake <cite>azure_data_store</cite> in a depth-first fashion from
+<cite>base_path</cite>, yielding files which match <cite>include_re</cite> AND not match <cite>exclude_re</cite></p>
+<p class="rubric">Notes</p>
+<p>If <cite>base_path</cite> does not exist then the generator returns nothing, it does not fail.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gordo_components.data_provider.base">
+<span id="base-data-provider"></span><h2>Base Data Provider<a class="headerlink" href="#module-gordo_components.data_provider.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gordo_components.data_provider.base.GordoBaseDataProvider">
+<em class="property">class </em><code class="descclassname">gordo_components.data_provider.base.</code><code class="descname">GordoBaseDataProvider</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/base.html#GordoBaseDataProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.base.GordoBaseDataProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="gordo_components.data_provider.base.GordoBaseDataProvider.can_handle_tag">
+<code class="descname">can_handle_tag</code><span class="sig-paren">(</span><em>tag: gordo_components.dataset.sensor_tag.SensorTag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/base.html#GordoBaseDataProvider.can_handle_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.base.GordoBaseDataProvider.can_handle_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if the dataprovider thinks it can possibly read this tag.
+Typically checks if the asset part of the tag is known to the reader.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>SensorTag - Dictionary with a &quot;tag&quot; key and optional &quot;asset&quot;</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.base.GordoBaseDataProvider.load_series">
+<code class="descname">load_series</code><span class="sig-paren">(</span><em>from_ts: datetime.datetime, to_ts: datetime.datetime, tag_list: List[gordo_components.dataset.sensor_tag.SensorTag]</em><span class="sig-paren">)</span> &#x2192; Iterable[pandas.core.series.Series]<a class="reference internal" href="../_modules/gordo_components/data_provider/base.html#GordoBaseDataProvider.load_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.base.GordoBaseDataProvider.load_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the required data as an iterable of series where each
+contains the values of the tag with time index</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>from_ts</strong> (<em>datetime - Datetime object representing the start of fetching data</em>) – </li>
+<li><strong>to_ts</strong> (<em>datetime - Datetime object representing the end of fetching data</em>) – </li>
+<li><strong>tag_list</strong> (<em>List</em><em>[</em><em>SensorTag</em><em>] </em><em>- List of tags to fetch</em><em>,</em>) – where each will end up being its own dataframe</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Iterable[pd.Series]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gordo_components.data_provider.base.GordoBaseDataProvider.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/base.html#GordoBaseDataProvider.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.base.GordoBaseDataProvider.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize this object into a dict representation, which can be used to
+initialize a new object after popping ‘type’ from the dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gordo_components.data_provider.base.capture_args">
+<code class="descclassname">gordo_components.data_provider.base.</code><code class="descname">capture_args</code><span class="sig-paren">(</span><em>method: Callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gordo_components/data_provider/base.html#capture_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gordo_components.data_provider.base.capture_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to capture <code class="docutils literal notranslate"><span class="pre">args</span></code> and <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> passed to a given method
+Assumed there is a <code class="docutils literal notranslate"><span class="pre">self</span></code> to which it assigned the attribute to as <code class="docutils literal notranslate"><span class="pre">_params</span></code>
+as one dict of kwargs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>method</strong> (<em>Callable</em>) – Some method of an object, with ‘self’ as the first parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Returns whatever the original method would return</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Any</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dataset.html" class="btn btn-neutral float-right" title="Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="builder.html" class="btn btn-neutral float-left" title="Builder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

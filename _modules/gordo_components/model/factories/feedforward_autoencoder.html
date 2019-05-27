@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gordo_components.model.factories.feedforward_autoencoder &mdash; Gordo Components  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Gordo Components
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.18.1.dev3+g4ddcb2f
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project Resources:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/architecture.html">Architecture</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Components:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/model/model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/builder.html">Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/data_provider.html">Data Proivers &amp; Readers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/dataset.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/serializer.html">Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/watchman.html">Watchman</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/server.html">ML Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/cli.html">CLI</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Gordo Components</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gordo_components.model.factories.feedforward_autoencoder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gordo_components.model.factories.feedforward_autoencoder</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">keras</span> <span class="k">import</span> <span class="n">regularizers</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Dense</span>
+<span class="kn">import</span> <span class="nn">keras</span>
+
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span> <span class="k">as</span> <span class="n">KerasSequential</span>
+<span class="kn">from</span> <span class="nn">gordo_components.model.register</span> <span class="k">import</span> <span class="n">register_model_builder</span>
+<span class="kn">from</span> <span class="nn">gordo_components.model.factories.model_factories_utils</span> <span class="k">import</span> <span class="n">hourglass_calc_dims</span>
+
+
+<div class="viewcode-block" id="feedforward_model"><a class="viewcode-back" href="../../../../components/model/model-factories.html#gordo_components.model.factories.feedforward_autoencoder.feedforward_model">[docs]</a><span class="nd">@register_model_builder</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;KerasAutoEncoder&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">feedforward_model</span><span class="p">(</span>
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">enc_dim</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dec_dim</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">enc_func</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dec_func</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds a customized keras neural network auto-encoder based on a config dict</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_features: int</span>
+<span class="sd">        Number of features the dataset X will contain.</span>
+<span class="sd">    enc_dim: list</span>
+<span class="sd">        List of numbers with the number of neurons in the encoding part</span>
+<span class="sd">    dec_dim: list</span>
+<span class="sd">        List of numbers with the number of neurons in the decoding part</span>
+<span class="sd">    enc_func: list</span>
+<span class="sd">        Activation functions for the encoder part</span>
+<span class="sd">    dec_func: list</span>
+<span class="sd">        Activation functions for the decoder part</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    keras.models.Sequential</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_dim</span> <span class="o">=</span> <span class="n">n_features</span>
+    <span class="n">encoding_dim</span> <span class="o">=</span> <span class="n">enc_dim</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">]</span>
+    <span class="n">decoding_dim</span> <span class="o">=</span> <span class="n">dec_dim</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">]</span>
+    <span class="n">encoding_func</span> <span class="o">=</span> <span class="n">enc_func</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">]</span>
+    <span class="n">decoding_func</span> <span class="o">=</span> <span class="n">dec_func</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">]</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">KerasSequential</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">encoding_dim</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">encoding_func</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;Number of layers ({len(encoding_dim)}) and number of functions ({len(encoding_func)}) must be equal for the encoder.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">decoding_dim</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">decoding_func</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;Number of layers ({len(decoding_dim)}) and number of functions ({len(decoding_func)}) must be equal for the decoder.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Add encoding layers</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">units</span><span class="p">,</span> <span class="n">activation</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">encoding_dim</span><span class="p">,</span> <span class="n">encoding_func</span><span class="p">)):</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="n">units</span><span class="p">,</span> <span class="s2">&quot;activation&quot;</span><span class="p">:</span> <span class="n">activation</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;input_dim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_dim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;activity_regularizer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">regularizers</span><span class="o">.</span><span class="n">l1</span><span class="p">(</span><span class="mf">10e-5</span><span class="p">)</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">))</span>
+
+    <span class="c1"># Add decoding layers</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">units</span><span class="p">,</span> <span class="n">activation</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">decoding_dim</span><span class="p">,</span> <span class="n">decoding_func</span><span class="p">)):</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">units</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">))</span>
+
+    <span class="c1"># Final output layer</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;tanh&quot;</span><span class="p">))</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mean_squared_error&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="feedforward_symmetric"><a class="viewcode-back" href="../../../../components/model/model-factories.html#gordo_components.model.factories.feedforward_autoencoder.feedforward_symmetric">[docs]</a><span class="nd">@register_model_builder</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;KerasAutoEncoder&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">feedforward_symmetric</span><span class="p">(</span>
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">dims</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+    <span class="n">funcs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds a symmetrical feedforward model</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_features: int</span>
+<span class="sd">         Number of input and output neurons</span>
+<span class="sd">    dim: List[int]</span>
+<span class="sd">         Number of neurons per layers for the encoder, reversed for the decoder.</span>
+<span class="sd">         Must have len &gt; 0</span>
+<span class="sd">    funcs: List[str]</span>
+<span class="sd">        Activation functions for the internal layers</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    keras.models.Sequential</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter dims must have len &gt; 0&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">feedforward_model</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">dims</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">funcs</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="feedforward_hourglass"><a class="viewcode-back" href="../../../../components/model/model-factories.html#gordo_components.model.factories.feedforward_autoencoder.feedforward_hourglass">[docs]</a><span class="nd">@register_model_builder</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;KerasAutoEncoder&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">feedforward_hourglass</span><span class="p">(</span>
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">encoding_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">compression_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">func</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Builds an hourglass shaped neural network, with decreasing number of neurons</span>
+<span class="sd">    as one gets deeper into the encoder network and increasing number</span>
+<span class="sd">    of neurons as one gets out of the decoder network.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_features: int</span>
+<span class="sd">        Number of input and output neurons</span>
+<span class="sd">    encoding_layers: int</span>
+<span class="sd">        Number of layers from the input layer (exclusive) to the</span>
+<span class="sd">        narrowest layer (inclusive). Must be &gt; 0. The total nr of layers</span>
+<span class="sd">        including input and output layer will be 2*encoding_layers + 1.</span>
+<span class="sd">    compression_factor: float</span>
+<span class="sd">        How small the smallest layer is as a ratio of n_features</span>
+<span class="sd">        (smallest layer is rounded up to nearest integer). Must satisfy</span>
+<span class="sd">        0 &lt;= compression_factor &lt;= 1.</span>
+<span class="sd">    func: str</span>
+<span class="sd">        Activation function for the internal layers</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The resulting model will look like this when n_features = 10, encoding_layers= 3,</span>
+<span class="sd">    and compression_factor = 0.3::</span>
+
+<span class="sd">                * * * * * * * * * *</span>
+<span class="sd">                  * * * * * * * *</span>
+<span class="sd">                     * * * * *</span>
+<span class="sd">                       * * *</span>
+<span class="sd">                       * * *</span>
+<span class="sd">                     * * * * *</span>
+<span class="sd">                  * * * * * * * *</span>
+<span class="sd">                * * * * * * * * * *</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    keras.models.Sequential</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; model = feedforward_hourglass(10)</span>
+<span class="sd">    &gt;&gt;&gt; len(model.layers)</span>
+<span class="sd">    7</span>
+<span class="sd">    &gt;&gt;&gt; [model.layers[i].units for i in range(len(model.layers))]</span>
+<span class="sd">    [8, 7, 5, 5, 7, 8, 10]</span>
+<span class="sd">    &gt;&gt;&gt; model = feedforward_hourglass(5)</span>
+<span class="sd">    &gt;&gt;&gt; [model.layers[i].units for i in range(len(model.layers))]</span>
+<span class="sd">    [4, 4, 3, 3, 4, 4, 5]</span>
+<span class="sd">    &gt;&gt;&gt; model = feedforward_hourglass(10, compression_factor=0.2)</span>
+<span class="sd">    &gt;&gt;&gt; [model.layers[i].units for i in range(len(model.layers))]</span>
+<span class="sd">    [7, 5, 2, 2, 5, 7, 10]</span>
+<span class="sd">    &gt;&gt;&gt; model = feedforward_hourglass(10, encoding_layers=1)</span>
+<span class="sd">    &gt;&gt;&gt; [model.layers[i].units for i in range(len(model.layers))]</span>
+<span class="sd">    [5, 5, 10]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="n">hourglass_calc_dims</span><span class="p">(</span><span class="n">compression_factor</span><span class="p">,</span> <span class="n">encoding_layers</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">feedforward_symmetric</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
